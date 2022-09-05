@@ -4,7 +4,7 @@ import punk_run from "./assets/main-characters/punk/Punk_run.png";
 
 const frameCounts = {
   idle: 4,
-  walk: 8,
+  walk: 6,
 };
 
 export const Player = ({
@@ -16,9 +16,10 @@ export const Player = ({
   playerActivity,
   playerSpriteFrameNumber,
 }) => {
+  console.log(playerSpriteFrameNumber);
   let totalNumberOfFrames = frameCounts[playerActivity];
   let spriteSheetPosition =
-    (playerSpriteFrameNumber % totalNumberOfFrames) * 90;
+    (playerSpriteFrameNumber % totalNumberOfFrames) * 90 - 10;
 
   const playerStyle = { height: "90px", position: "relative", bottom: "15px" };
   if (playerDirection == "left") {

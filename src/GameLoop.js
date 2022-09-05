@@ -86,15 +86,12 @@ export const GameLoop = () => {
 
   let [playerSpriteFrameNumber, setPlayerSpriteFrameNumber] = useState(0);
 
-  let timeElapsed = 0;
+  let [timeElapsed, setTimeElapsed] = useState(0);
 
   useAnimationFrame(
     (deltaTime) => {
-      // Pass on a function to the setter of the state
-      // to make sure we always have the latest state
-      // setCount(prevCount => (prevCount + deltaTime * 0.01) % 100)
-      timeElapsed = (timeElapsed + deltaTime / 1000) % 20;
-      setPlayerSpriteFrameNumber(Math.round(timeElapsed * 3.5));
+      setTimeElapsed((timeElapsed) => (timeElapsed + deltaTime / 1000) % 20);
+      setPlayerSpriteFrameNumber(Math.round(timeElapsed * 8));
 
       let playerTranslationAmount = playerSpeed * deltaTime * 0.1;
       let playerIsAtLeftBound = playerX <= -340;
@@ -126,7 +123,7 @@ export const GameLoop = () => {
         setPlayerActivity("idle");
       }
     },
-    [currentlyPressed, environmentX, playerX]
+    [currentlyPressed, environmentX, playerX, playerY, timeElapsed]
   );
 
   return (
