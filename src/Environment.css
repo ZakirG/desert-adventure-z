@@ -1,0 +1,9 @@
+#environment-div {
+  position: absolute;
+  z-index: 0;
+}
+
+#environment-img {
+  position: relative;
+  top: -350px;
+}

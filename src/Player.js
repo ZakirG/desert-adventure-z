@@ -1,17 +1,26 @@
-import { useState, useEffect } from "react";
-import * as d3 from "d3";
+import "./Player.css";
+import punk_idle from "./assets/main-characters/punk/Punk_idle.png";
 
-export const Player = ({ playerX, playerY, currentlyPressed }) => {
+export const Player = ({
+  playerX,
+  playerY,
+  playerHeight,
+  playerWidth,
+  currentlyPressed,
+  gameHeight,
+  gameWidth,
+}) => {
   console.log(playerX, playerY);
 
   return (
-    <rect
-      transform={`translate(${playerX}, ${playerY})`}
-      width="10"
-      height="10"
-      fill="white"
-      stroke="white"
-      strokeWidth="2"
-    />
+    <div
+      id="player-div"
+      style={{
+        bottom: -650 + playerY,
+        left: 100 + playerX,
+      }}
+    >
+      <img src={punk_idle} alt="player" className="player-sprite-sheet" />
+    </div>
   );
 };
