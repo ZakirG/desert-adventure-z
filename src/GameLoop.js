@@ -12,7 +12,6 @@ function useCurrentlyPressed() {
 
   function downHandler({ repeat, key }) {
     if (repeat) return;
-    console.log(key);
     let allowedKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
     setCurrentlyPressed((currentlyPressed) => {
       if (allowedKeys.includes(key) && !currentlyPressed.includes(key)) {
@@ -72,49 +71,82 @@ export const GameLoop = () => {
   let gameHeight = 720;
   let gameWidth = 800;
   const currentlyPressed = useCurrentlyPressed();
+  let [environmentX, setEnvironmentX] = useState(-3);
+  let [environmentY, setEnvironmentY] = useState(0);
+
   let [playerX, setPlayerX] = useState(0);
   let [playerY, setPlayerY] = useState(0);
-  let [playerSpeed, setPlayerSpeed] = useState(2);
-  let playerHeight = 100;
-  let playerWidth = 100;
 
-  console.log("currentlyPressed: ", currentlyPressed);
+  const [playerDirection, setPlayerDirection] = useState("right");
+  const [playerActivity, setPlayerActivity] = useState("idle");
+
+  let [playerSpeed, setPlayerSpeed] = useState(2.5);
+
+  let [playerStartX, playerStartY] = [350, -600];
+
+  let [playerSpriteFrameNumber, setPlayerSpriteFrameNumber] = useState(0);
+
+  let timeElapsed = 0;
 
   useAnimationFrame(
     (deltaTime) => {
       // Pass on a function to the setter of the state
       // to make sure we always have the latest state
       // setCount(prevCount => (prevCount + deltaTime * 0.01) % 100)
+      timeElapsed = (timeElapsed + deltaTime / 1000) % 20;
+      setPlayerSpriteFrameNumber(Math.round(timeElapsed * 3.5));
 
       let playerTranslationAmount = playerSpeed * deltaTime * 0.1;
-      if (currentlyPressed.includes("ArrowLeft")) {
-        setPlayerX((x) => x - playerTranslationAmount);
+      let playerIsAtLeftBound = playerX <= -340;
+      let playerIsNearTheCenter = playerX < 4 && playerX > -4;
+      let environmentIsAtLeftBound = environmentX >= -3;
+
+      if (environmentX >= -3) {
+        setEnvironmentX(-3);
       }
-      if (currentlyPressed.includes("ArrowRight")) {
-        setPlayerX((x) => x + playerTranslationAmount);
+
+      if (currentlyPressed.includes("ArrowLeft")) {
+        if (environmentIsAtLeftBound && !playerIsAtLeftBound) {
+          setPlayerX((x) => x - playerTranslationAmount);
+        } else if (!environmentIsAtLeftBound && !playerIsAtLeftBound) {
+          setEnvironmentX((x) => x + playerTranslationAmount);
+        }
+
+        setPlayerDirection("left");
+        setPlayerActivity("walk");
+      } else if (currentlyPressed.includes("ArrowRight")) {
+        if (environmentIsAtLeftBound && !playerIsNearTheCenter) {
+          setPlayerX((x) => x + playerTranslationAmount);
+        } else {
+          setEnvironmentX((x) => x - playerTranslationAmount);
+        }
+        setPlayerDirection("right");
+        setPlayerActivity("walk");
+      } else if (currentlyPressed.length === 0) {
+        setPlayerActivity("idle");
       }
     },
-    [currentlyPressed]
+    [currentlyPressed, environmentX, playerX]
   );
 
   return (
     <>
       <Environment
-        environmentX={playerX}
-        environmentY={playerY}
+        environmentX={environmentX}
+        environmentY={environmentY}
         currentlyPressed={currentlyPressed}
         gameHeight={gameHeight}
         gameWidth={gameWidth}
         imageSource={background_1}
       ></Environment>
       <Player
+        playerDirection={playerDirection}
+        playerActivity={playerActivity}
         playerX={playerX}
         playerY={playerY}
-        playerHeight={playerHeight}
-        playerWidth={playerWidth}
-        currentlyPressed={currentlyPressed}
-        gameHeight={gameHeight}
-        gameWidth={gameWidth}
+        playerStartX={playerStartX}
+        playerStartY={playerStartY}
+        playerSpriteFrameNumber={playerSpriteFrameNumber}
       ></Player>
     </>
   );

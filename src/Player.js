@@ -1,26 +1,55 @@
 import "./Player.css";
 import punk_idle from "./assets/main-characters/punk/Punk_idle.png";
+import punk_run from "./assets/main-characters/punk/Punk_run.png";
+
+const frameCounts = {
+  idle: 4,
+  walk: 8,
+};
 
 export const Player = ({
   playerX,
   playerY,
-  playerHeight,
-  playerWidth,
-  currentlyPressed,
-  gameHeight,
-  gameWidth,
+  playerStartX,
+  playerStartY,
+  playerDirection,
+  playerActivity,
+  playerSpriteFrameNumber,
 }) => {
-  console.log(playerX, playerY);
+  let totalNumberOfFrames = frameCounts[playerActivity];
+  let spriteSheetPosition =
+    (playerSpriteFrameNumber % totalNumberOfFrames) * 90;
+
+  const playerStyle = { height: "90px", position: "relative", bottom: "15px" };
+  if (playerDirection == "left") {
+    playerStyle.transform = "scaleX(-1)";
+    playerStyle["WebkitTransform"] = "scaleX(-1)";
+    playerStyle.right = spriteSheetPosition + 45 + "px";
+  } else if (playerDirection == "right") {
+    playerStyle.transform = "";
+    playerStyle["WebkitTransform"] = "";
+    playerStyle.right = spriteSheetPosition + "px";
+  }
+
+  let playerSpriteSheet = punk_idle;
+  if (playerActivity === "walk") {
+    playerSpriteSheet = punk_run;
+  }
 
   return (
     <div
       id="player-div"
       style={{
-        bottom: -650 + playerY,
-        left: 100 + playerX,
+        left: playerStartX + playerX,
+        bottom: playerStartY + playerY,
       }}
     >
-      <img src={punk_idle} alt="player" className="player-sprite-sheet" />
+      <img
+        src={playerSpriteSheet}
+        alt="player"
+        className="player-sprite-sheet"
+        style={playerStyle}
+      />
     </div>
   );
 };
