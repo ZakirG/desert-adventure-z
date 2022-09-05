@@ -10,23 +10,29 @@ import * as d3 from "d3";
 function useCurrentlyPressed() {
   const [currentlyPressed, setCurrentlyPressed] = useState([]);
 
-  function downHandler({ repeat, key }) {
+  function downHandler({ repeat, code }) {
     if (repeat) return;
-    let allowedKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+    let allowedKeys = [
+      "ArrowDown",
+      "ArrowUp",
+      "ArrowLeft",
+      "ArrowRight",
+      "Space",
+    ];
     setCurrentlyPressed((currentlyPressed) => {
-      if (allowedKeys.includes(key) && !currentlyPressed.includes(key)) {
-        return [...currentlyPressed, key];
+      if (allowedKeys.includes(code) && !currentlyPressed.includes(code)) {
+        return [...currentlyPressed, code];
       }
       return currentlyPressed;
     });
   }
 
-  function upHandler({ repeat, key }) {
+  function upHandler({ repeat, code }) {
     if (repeat) return;
     setCurrentlyPressed((currentlyPressed) => {
-      if (currentlyPressed.includes(key)) {
+      if (currentlyPressed.includes(code)) {
         let updatedCurrentlyPressed = currentlyPressed.slice();
-        updatedCurrentlyPressed.splice(currentlyPressed.indexOf(key), 1);
+        updatedCurrentlyPressed.splice(currentlyPressed.indexOf(code), 1);
         return updatedCurrentlyPressed;
       }
       return currentlyPressed;
@@ -76,6 +82,7 @@ export const GameLoop = () => {
 
   let [playerX, setPlayerX] = useState(0);
   let [playerY, setPlayerY] = useState(0);
+  let [playerVY, setPlayerVY] = useState(0);
 
   const [playerDirection, setPlayerDirection] = useState("right");
   const [playerActivity, setPlayerActivity] = useState("idle");
@@ -88,9 +95,13 @@ export const GameLoop = () => {
 
   let [timeElapsed, setTimeElapsed] = useState(0);
 
+  let playerWeight = 0.5;
+
+  let [mostRecentJump, setMostRecentJump] = useState(0);
+
   useAnimationFrame(
     (deltaTime) => {
-      setTimeElapsed((timeElapsed) => (timeElapsed + deltaTime / 1000) % 20);
+      setTimeElapsed((timeElapsed) => timeElapsed + deltaTime / 1000);
       setPlayerSpriteFrameNumber(Math.round(timeElapsed * 8));
 
       let playerTranslationAmount = playerSpeed * deltaTime * 0.1;
@@ -102,6 +113,9 @@ export const GameLoop = () => {
         setEnvironmentX(-3);
       }
 
+      let playerIsJumping =
+        playerActivity === "jump" || playerActivity === "double_jump";
+
       if (currentlyPressed.includes("ArrowLeft")) {
         if (environmentIsAtLeftBound && !playerIsAtLeftBound) {
           setPlayerX((x) => x - playerTranslationAmount);
@@ -110,7 +124,9 @@ export const GameLoop = () => {
         }
 
         setPlayerDirection("left");
-        setPlayerActivity("walk");
+        if (!playerIsJumping) {
+          setPlayerActivity("walk");
+        }
       } else if (currentlyPressed.includes("ArrowRight")) {
         if (environmentIsAtLeftBound && !playerIsNearTheCenter) {
           setPlayerX((x) => x + playerTranslationAmount);
@@ -118,12 +134,49 @@ export const GameLoop = () => {
           setEnvironmentX((x) => x - playerTranslationAmount);
         }
         setPlayerDirection("right");
-        setPlayerActivity("walk");
-      } else if (currentlyPressed.length === 0) {
+        if (!playerIsJumping) {
+          setPlayerActivity("walk");
+        }
+      }
+
+      if (!playerIsJumping && currentlyPressed.length === 0) {
         setPlayerActivity("idle");
       }
+
+      if (
+        currentlyPressed.includes("Space") &&
+        playerActivity === "jump" &&
+        mostRecentJump + 0.2 < timeElapsed
+      ) {
+        console.log("double jumping...");
+        setPlayerActivity("double_jump");
+        setPlayerVY(15);
+      }
+
+      if (
+        currentlyPressed.includes("Space") &&
+        playerActivity !== "jump" &&
+        playerActivity !== "double_jump"
+      ) {
+        setPlayerActivity("jump");
+        setPlayerVY(10);
+        setPlayerY((y) => y + 6);
+        setMostRecentJump(timeElapsed);
+      } else if (
+        playerActivity === "jump" ||
+        playerActivity === "double_jump"
+      ) {
+        if (playerY > 5.8) {
+          setPlayerVY((vy) => vy - playerWeight);
+          setPlayerY((y) => y + playerVY);
+        } else {
+          setPlayerVY(0);
+          setPlayerY(0);
+          setPlayerActivity("idle");
+        }
+      }
     },
-    [currentlyPressed, environmentX, playerX, playerY, timeElapsed]
+    [currentlyPressed, environmentX, playerX, playerY, playerVY, timeElapsed]
   );
 
   return (
