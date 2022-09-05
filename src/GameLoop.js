@@ -87,8 +87,6 @@ export const GameLoop = () => {
   const [playerDirection, setPlayerDirection] = useState("right");
   const [playerActivity, setPlayerActivity] = useState("idle");
 
-  let [playerSpeed, setPlayerSpeed] = useState(2.5);
-
   let [playerStartX, playerStartY] = [350, -600];
 
   let [playerSpriteFrameNumber, setPlayerSpriteFrameNumber] = useState(0);
@@ -102,10 +100,10 @@ export const GameLoop = () => {
   useAnimationFrame(
     (deltaTime) => {
       setTimeElapsed((timeElapsed) => timeElapsed + deltaTime / 1000);
-      setPlayerSpriteFrameNumber(Math.round(timeElapsed * 8));
 
-      let playerTranslationAmount = playerSpeed * deltaTime * 0.1;
-      let playerIsAtLeftBound = playerX <= -340;
+      let playerTranslationAmount = 2.7 * deltaTime * 0.1;
+
+      let playerIsAtLeftBound = playerX <= -355;
       let playerIsNearTheCenter = playerX < 4 && playerX > -4;
       let environmentIsAtLeftBound = environmentX >= -3;
 
@@ -148,9 +146,9 @@ export const GameLoop = () => {
         playerActivity === "jump" &&
         mostRecentJump + 0.2 < timeElapsed
       ) {
-        console.log("double jumping...");
         setPlayerActivity("double_jump");
-        setPlayerVY(15);
+        setPlayerVY(14);
+        setPlayerY((y) => y + 8);
       }
 
       if (
@@ -159,7 +157,7 @@ export const GameLoop = () => {
         playerActivity !== "double_jump"
       ) {
         setPlayerActivity("jump");
-        setPlayerVY(10);
+        setPlayerVY(8);
         setPlayerY((y) => y + 6);
         setMostRecentJump(timeElapsed);
       } else if (
@@ -196,7 +194,7 @@ export const GameLoop = () => {
         playerY={playerY}
         playerStartX={playerStartX}
         playerStartY={playerStartY}
-        playerSpriteFrameNumber={playerSpriteFrameNumber}
+        timeElapsed={timeElapsed}
       ></Player>
     </>
   );

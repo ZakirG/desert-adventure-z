@@ -11,6 +11,13 @@ const frameCounts = {
   double_jump: 6,
 };
 
+const spriteAnimationSpeeds = {
+  idle: 8,
+  walk: 10,
+  jump: 8,
+  double_jump: 8,
+};
+
 export const Player = ({
   playerX,
   playerY,
@@ -18,21 +25,31 @@ export const Player = ({
   playerStartY,
   playerDirection,
   playerActivity,
-  playerSpriteFrameNumber,
+  timeElapsed,
 }) => {
+  let playerSpriteFrameNumber = Math.round(
+    timeElapsed * spriteAnimationSpeeds[playerActivity]
+  );
   let totalNumberOfFrames = frameCounts[playerActivity];
   let spriteSheetPosition =
-    (playerSpriteFrameNumber % totalNumberOfFrames) * 90 - 10;
+    (playerSpriteFrameNumber % totalNumberOfFrames) * 90 - 15;
+  if (playerDirection === "left") {
+    // Reverse the animation order to preserve the illusion of moving left
+    spriteSheetPosition =
+      (playerSpriteFrameNumber % totalNumberOfFrames) * -90 +
+      90 * (totalNumberOfFrames - 1) -
+      15;
+  }
 
   const playerStyle = { height: "90px", position: "relative", bottom: "15px" };
   if (playerDirection == "left") {
     playerStyle.transform = "scaleX(-1)";
     playerStyle["WebkitTransform"] = "scaleX(-1)";
-    playerStyle.right = spriteSheetPosition + 45 - 10 + "px";
+    playerStyle.right = spriteSheetPosition + 40 + "px";
   } else if (playerDirection == "right") {
     playerStyle.transform = "";
     playerStyle["WebkitTransform"] = "";
-    playerStyle.right = spriteSheetPosition - 5 + "px";
+    playerStyle.right = spriteSheetPosition + "px";
   }
 
   // console.log("playerActivity", playerActivity);
