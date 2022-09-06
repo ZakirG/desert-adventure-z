@@ -4,6 +4,7 @@ import punk_run from "./assets/main-characters/punk/Punk_run.png";
 import punk_jump from "./assets/main-characters/punk/Punk_jump.png";
 import punk_double_jump from "./assets/main-characters/punk/Punk_double_jump.png";
 import punk_clap_attack from "./assets/main-characters/punk/Punk_attack3.png";
+import { useRef, useEffect } from "react";
 
 const frameCounts = {
   idle: 4,
@@ -38,18 +39,40 @@ export const Player = ({
   playerActivity,
   timeElapsed,
 }) => {
-  let playerSpriteFrameNumber = Math.round(
-    timeElapsed * spriteAnimationSpeeds[playerActivity]
-  );
+  let previousFrameRef = useRef(0);
+  let previousActivityRef = useRef(playerActivity);
+  let lastFrameChange = useRef(timeElapsed);
+
+  if (previousActivityRef.current !== playerActivity) {
+    previousActivityRef.current = playerActivity;
+    previousFrameRef.current = 0;
+    lastFrameChange.current = timeElapsed;
+  }
+
+  // useEffect(() => {
+  //   previousFrameRef.current = 0;
+  //   lastFrameChange.current = timeElapsed;
+  // }, [playerActivity]);
+
   let totalNumberOfFrames = frameCounts[playerActivity];
-  let spriteSheetPosition =
-    (playerSpriteFrameNumber % totalNumberOfFrames) * 90 - 15;
+  let timeSinceLastFrame = timeElapsed - lastFrameChange.current;
+  let incrementor = 0;
+  if (timeSinceLastFrame > 1 / spriteAnimationSpeeds[playerActivity]) {
+    lastFrameChange.current = timeElapsed;
+    incrementor = 1;
+  }
+  let playerSpriteFrameNumber =
+    (previousFrameRef.current + incrementor) % totalNumberOfFrames;
+
+  previousFrameRef.current = playerSpriteFrameNumber;
+  if (playerActivity == "clap_attack") {
+    console.log(playerSpriteFrameNumber);
+  }
+  let spriteSheetPosition = playerSpriteFrameNumber * 90 - 15;
   if (playerDirection === "left") {
     // Reverse the animation order to preserve the illusion of moving left
     spriteSheetPosition =
-      (playerSpriteFrameNumber % totalNumberOfFrames) * -90 +
-      90 * (totalNumberOfFrames - 1) -
-      15;
+      playerSpriteFrameNumber * -90 + 90 * (totalNumberOfFrames - 1) - 15;
   }
 
   const playerStyle = { height: "90px", position: "relative", bottom: "15px" };

@@ -98,8 +98,11 @@ export const usePlayerMovement = (
         setPlayerActivity("idle");
       }
 
+      let jumpKeyPressed =
+        currentlyPressed.includes(jumpKey) || currentlyPressed.includes(upKey);
+
       if (
-        currentlyPressed.includes(jumpKey) &&
+        jumpKeyPressed &&
         playerActivity === "jump" &&
         mostRecentJump + 0.2 < timeElapsed
       ) {
@@ -111,7 +114,7 @@ export const usePlayerMovement = (
       }
 
       if (
-        currentlyPressed.includes(jumpKey) &&
+        jumpKeyPressed &&
         playerActivity !== "jump" &&
         playerActivity !== "double_jump"
       ) {
@@ -145,6 +148,7 @@ export const usePlayerMovement = (
     playerY,
     playerDirection,
     playerActivity,
+    setPlayerActivity,
     environmentX,
     environmentY,
     timeElapsed,

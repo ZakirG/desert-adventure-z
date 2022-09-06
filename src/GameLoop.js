@@ -41,6 +41,7 @@ export const GameLoop = () => {
     playerY,
     playerDirection,
     playerActivity,
+    setPlayerActivity,
     environmentX,
     environmentY,
     timeElapsed,
