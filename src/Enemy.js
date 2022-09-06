@@ -2,7 +2,6 @@ import "./Enemy.css";
 import hyena_idle from "./assets/enemies/Hyena/Hyena_idle.png";
 import hyena_run from "./assets/enemies/Hyena/Hyena_walk.png";
 import hyena_attack from "./assets/enemies/Hyena/Hyena_attack.png";
-import { useRef } from "react";
 import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
 
 const frameCounts = {
@@ -47,6 +46,9 @@ export const Enemy = ({
     extraPadding,
     timeElapsed
   );
+
+  let spriteShift = enemyDirection === "right" ? "0px" : "40px";
+  enemyStyle.paddingRight = spriteShift;
 
   return (
     <div

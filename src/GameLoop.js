@@ -1,6 +1,6 @@
 import { useCurrentlyPressed } from "./hooks/useCurrentlyPressed";
 import { usePlayerMovement } from "./hooks/usePlayerMovement";
-import { useEnemy } from "./hooks/useEnemy";
+import { useEnemyAI } from "./hooks/useEnemyAI";
 import { Player } from "./Player";
 import { Enemy } from "./Enemy";
 import { Environment } from "./Environment";
@@ -49,12 +49,17 @@ export const GameLoop = () => {
   ] = usePlayerMovement(playerWeight, playerSpeed, currentlyPressed, controls);
 
   let enemySpeed = 1;
-  let [enemyStartX, enemyStartY] = [700, 137];
+  let [enemyStartX, enemyStartY] = [700, 136];
 
-  let [enemyX, enemyY, enemyDirection, enemyActivity] = useEnemy(
+  let [enemyX, enemyY, enemyDirection, enemyActivity] = useEnemyAI(
     "hyena",
     enemyStartX,
     enemyStartY,
+    playerStartX,
+    playerX,
+    playerY,
+    environmentX,
+    environmentY,
     enemySpeed,
     playerActivity,
     setPlayerActivity,
