@@ -1,4 +1,4 @@
-This project was bootstrapped with [https://github.com/facebook/create-react-app](Create React App).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 # Desert Survival Adventure
 
@@ -12,8 +12,7 @@ The sprites in this game will be free sprites from the internet.
 
 #### Why build a game in React / TypeScript?
 
-My learning goals are to master this stack, but aside from that:
-
+- My learning goals are to master React + TypeScript
 - A game is an open-ended project that can be expanded indefinitely
 - Games have complex state management requirements, which React and its libraries are useful for
 - In the future, the project can be translated into React Native and rebuilt for iOS
