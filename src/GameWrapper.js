@@ -24,25 +24,8 @@ const GameContainer = styled.div`
 `;
 
 export const GameWrapper = () => {
-  let assetsDir = "../assets";
-  // const canvasRef = useRef();
-
-  let [assetsLoaded, setAssetsLoaded] = useState(false);
-
-  // useEffect(() => {
-  //   if (canvasRef.current) {
-  //     const ctx = canvasRef.current.getContext("2d");
-  //     canvasRef.current.width = 800;
-  //     canvasRef.current.height = 720;
-  //     setAssetsLoaded(true);
-  //     console.log("assetsLoaded");
-  //   }
-  // }, []);
-
   return (
     <GameContainer>
-      {/* <canvas id="canvas-1" ref={canvasRef}></canvas> */}
-      {/* {assetsLoaded ? <GameLoop /> : null} */}
       <GameLoop />
     </GameContainer>
   );

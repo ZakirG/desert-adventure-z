@@ -3,19 +3,30 @@ import punk_idle from "./assets/main-characters/punk/Punk_idle.png";
 import punk_run from "./assets/main-characters/punk/Punk_run.png";
 import punk_jump from "./assets/main-characters/punk/Punk_jump.png";
 import punk_double_jump from "./assets/main-characters/punk/Punk_double_jump.png";
+import punk_clap_attack from "./assets/main-characters/punk/Punk_attack3.png";
 
 const frameCounts = {
   idle: 4,
   walk: 6,
   jump: 4,
   double_jump: 6,
+  clap_attack: 8,
 };
 
 const spriteAnimationSpeeds = {
   idle: 8,
-  walk: 10,
+  walk: 14,
   jump: 8,
   double_jump: 8,
+  clap_attack: 12,
+};
+
+const activitiesForSprite = {
+  idle: punk_idle,
+  walk: punk_run,
+  jump: punk_jump,
+  double_jump: punk_double_jump,
+  clap_attack: punk_clap_attack,
 };
 
 export const Player = ({
@@ -52,17 +63,7 @@ export const Player = ({
     playerStyle.right = spriteSheetPosition + "px";
   }
 
-  // console.log("playerActivity", playerActivity);
-  let playerSpriteSheet = punk_idle;
-  if (playerActivity === "walk") {
-    playerSpriteSheet = punk_run;
-  }
-  if (playerActivity === "jump") {
-    playerSpriteSheet = punk_jump;
-  }
-  if (playerActivity === "double_jump") {
-    playerSpriteSheet = punk_double_jump;
-  }
+  let playerSpriteSheet = activitiesForSprite[playerActivity];
 
   return (
     <div
