@@ -1,7 +1,8 @@
-import { useState } from "react";
 import { useCurrentlyPressed } from "./hooks/useCurrentlyPressed";
 import { usePlayerMovement } from "./hooks/usePlayerMovement";
+import { useEnemy } from "./hooks/useEnemy";
 import { Player } from "./Player";
+import { Enemy } from "./Enemy";
 import { Environment } from "./Environment";
 import background_1 from "./assets/backgrounds/1/background.png";
 
@@ -47,6 +48,19 @@ export const GameLoop = () => {
     timeElapsed,
   ] = usePlayerMovement(playerWeight, playerSpeed, currentlyPressed, controls);
 
+  let enemySpeed = 1;
+  let [enemyStartX, enemyStartY] = [700, 137];
+
+  let [enemyX, enemyY, enemyDirection, enemyActivity] = useEnemy(
+    "hyena",
+    enemyStartX,
+    enemyStartY,
+    enemySpeed,
+    playerActivity,
+    setPlayerActivity,
+    timeElapsed
+  );
+
   return (
     <>
       <Environment
@@ -56,7 +70,18 @@ export const GameLoop = () => {
         gameHeight={gameHeight}
         gameWidth={gameWidth}
         imageSource={background_1}
-      ></Environment>
+      >
+        <Enemy
+          enemyType="hyena"
+          enemyX={enemyX}
+          enemyY={enemyY}
+          enemyStartX={enemyStartX}
+          enemyStartY={enemyStartY}
+          enemyDirection={enemyDirection}
+          enemyActivity={enemyActivity}
+          timeElapsed={timeElapsed}
+        ></Enemy>
+      </Environment>
       <Player
         playerDirection={playerDirection}
         playerActivity={playerActivity}

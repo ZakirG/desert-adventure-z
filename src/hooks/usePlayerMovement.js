@@ -19,7 +19,7 @@ export const usePlayerMovement = (
 
   let [playerIsUsingAttack1, setPlayerIsUsingAttack1] = useState(false);
   let [mostRecentAttack1, setMostRecentAttack1] = useState(false);
-  let attack1Duration = 0.5;
+  let attack1Duration = 0.7;
 
   const [playerDirection, setPlayerDirection] = useState("right");
   const [playerActivity, setPlayerActivity] = useState("idle");
@@ -42,22 +42,14 @@ export const usePlayerMovement = (
         setEnvironmentY(0);
       }
 
-      //   console.log("time elapsed: ", timeElapsed);
-      //   console.log(
-      //     "ending time of attack: ",
-      //     mostRecentAttack1 + attack1Duration
-      //   );
-
       if (
         playerIsUsingAttack1 &&
         timeElapsed > mostRecentAttack1 + attack1Duration
       ) {
-        console.log("ending attack 1");
         setPlayerIsUsingAttack1(false);
         setPlayerActivity("idle");
       } else if (playerIsUsingAttack1) {
         // no other actions allowed while attacking
-        console.log("blocking");
         return;
       }
 

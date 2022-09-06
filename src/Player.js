@@ -4,7 +4,7 @@ import punk_run from "./assets/main-characters/punk/Punk_run.png";
 import punk_jump from "./assets/main-characters/punk/Punk_jump.png";
 import punk_double_jump from "./assets/main-characters/punk/Punk_double_jump.png";
 import punk_clap_attack from "./assets/main-characters/punk/Punk_attack3.png";
-import { useRef, useEffect } from "react";
+import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
 
 const frameCounts = {
   idle: 4,
@@ -39,54 +39,19 @@ export const Player = ({
   playerActivity,
   timeElapsed,
 }) => {
-  let previousFrameRef = useRef(0);
-  let previousActivityRef = useRef(playerActivity);
-  let lastFrameChange = useRef(timeElapsed);
+  let spriteImageWidth = 90;
+  let extraPadding = 15;
 
-  if (previousActivityRef.current !== playerActivity) {
-    previousActivityRef.current = playerActivity;
-    previousFrameRef.current = 0;
-    lastFrameChange.current = timeElapsed;
-  }
-
-  // useEffect(() => {
-  //   previousFrameRef.current = 0;
-  //   lastFrameChange.current = timeElapsed;
-  // }, [playerActivity]);
-
-  let totalNumberOfFrames = frameCounts[playerActivity];
-  let timeSinceLastFrame = timeElapsed - lastFrameChange.current;
-  let incrementor = 0;
-  if (timeSinceLastFrame > 1 / spriteAnimationSpeeds[playerActivity]) {
-    lastFrameChange.current = timeElapsed;
-    incrementor = 1;
-  }
-  let playerSpriteFrameNumber =
-    (previousFrameRef.current + incrementor) % totalNumberOfFrames;
-
-  previousFrameRef.current = playerSpriteFrameNumber;
-  if (playerActivity == "clap_attack") {
-    console.log(playerSpriteFrameNumber);
-  }
-  let spriteSheetPosition = playerSpriteFrameNumber * 90 - 15;
-  if (playerDirection === "left") {
-    // Reverse the animation order to preserve the illusion of moving left
-    spriteSheetPosition =
-      playerSpriteFrameNumber * -90 + 90 * (totalNumberOfFrames - 1) - 15;
-  }
-
-  const playerStyle = { height: "90px", position: "relative", bottom: "15px" };
-  if (playerDirection == "left") {
-    playerStyle.transform = "scaleX(-1)";
-    playerStyle["WebkitTransform"] = "scaleX(-1)";
-    playerStyle.right = spriteSheetPosition + 40 + "px";
-  } else if (playerDirection == "right") {
-    playerStyle.transform = "";
-    playerStyle["WebkitTransform"] = "";
-    playerStyle.right = spriteSheetPosition + "px";
-  }
-
-  let playerSpriteSheet = activitiesForSprite[playerActivity];
+  let [playerStyle, playerSpriteSheet, paddingDirection] = useSpriteAnimation(
+    frameCounts,
+    spriteAnimationSpeeds,
+    activitiesForSprite,
+    playerActivity,
+    playerDirection,
+    spriteImageWidth,
+    extraPadding,
+    timeElapsed
+  );
 
   return (
     <div
@@ -94,6 +59,7 @@ export const Player = ({
       style={{
         left: playerStartX + playerX,
         bottom: playerStartY + playerY,
+        [paddingDirection]: "10px",
       }}
     >
       <img
