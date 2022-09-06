@@ -7,7 +7,7 @@ The sprites in this game will be free sprites from the internet.
 
 Why build a game in React / TypeScript?
 
-- My learning goals are to master this stack
+- My learning goals are to master React + TypeScript
 - A game is an open-ended project that can be expanded indefinitely
 - Games have complex state management requirements
 - In the future, the project can be translated into React Native and rebuilt for iOS
