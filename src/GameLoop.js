@@ -41,6 +41,7 @@ export const GameLoop = () => {
     playerX,
     playerY,
     playerDirection,
+    setPlayerDirection,
     playerActivity,
     setPlayerActivity,
     environmentX,
@@ -48,23 +49,29 @@ export const GameLoop = () => {
     timeElapsed,
   ] = usePlayerMovement(playerWeight, playerSpeed, currentlyPressed, controls);
 
-  let enemySpeed = 1;
+  let enemySpeed = 1.5;
+  let attackRange = 45;
+  let chaseRange = 300;
   let [enemyStartX, enemyStartY] = [700, 136];
 
-  let [enemyX, enemyY, enemyDirection, enemyActivity] = useEnemyAI(
-    "hyena",
-    enemyStartX,
-    enemyStartY,
-    playerStartX,
-    playerX,
-    playerY,
-    environmentX,
-    environmentY,
-    enemySpeed,
-    playerActivity,
-    setPlayerActivity,
-    timeElapsed
-  );
+  let [enemyX, enemyY, enemyDirection, enemyActivity, setEnemyActivity] =
+    useEnemyAI(
+      "hyena",
+      enemyStartX,
+      enemyStartY,
+      playerStartX,
+      playerX,
+      playerY,
+      environmentX,
+      environmentY,
+      enemySpeed,
+      attackRange,
+      chaseRange,
+      playerActivity,
+      setPlayerActivity,
+      setPlayerDirection,
+      timeElapsed
+    );
 
   return (
     <>

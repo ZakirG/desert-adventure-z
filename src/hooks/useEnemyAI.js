@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAnimationFrame } from "./useAnimationFrame";
 
-function playerIsToTheLeftOfEnemy(
-  playerStartX,
-  enemyX,
-  enemyStartX,
-  environmentX
-) {
-  return -1 * environmentX + playerStartX > enemyX + enemyStartX;
-}
+let distanceFormula = (point1, point2) => {
+  let [x1, x2] = point1;
+  let [y1, y2] = point2;
+  return Math.sqrt(Math.pow(x2 - y2, 2) + Math.pow(x1 - y1, 2));
+};
 
 export const useEnemyAI = (
   enemyType,
@@ -20,15 +17,19 @@ export const useEnemyAI = (
   environmentX,
   environmentY,
   enemySpeed,
+  attackRange,
+  chaseRange,
   playerActivity,
   setPlayerActivity,
+  setPlayerDirection,
   timeElapsed
 ) => {
   let [mostRecentJump, setMostRecentJump] = useState(0);
 
-  let [enemyIsUsingAttack1, setEnemyIsUsingAttack1] = useState(false);
-  let [mostRecentAttack1, setMostRecentAttack1] = useState(false);
-  let attack1Duration = 0.7;
+  let [mostRecentEnemyAttack, setMostRecentEnemyAttack] = useState(false);
+  let timeToHurtPlayerFromAttackStart = 0.3; // todo: parametrize this
+  let coolDownBetweenAttacks = 1.5; // todo: parametrize this
+  let attackPhaseDuration = 1.4; // todo: make this a list with multiple possible values to be chosen at random
 
   const [enemyDirection, setEnemyDirection] = useState("right");
   const [enemyActivity, setEnemyActivity] = useState("idle");
@@ -41,38 +42,62 @@ export const useEnemyAI = (
     (deltaTime) => {
       let enemyTranslationAmount = enemySpeed * deltaTime * 0.1;
 
-      if (
-        playerIsToTheLeftOfEnemy(
-          playerStartX,
-          enemyX,
-          enemyStartX,
-          environmentX
-        )
-      ) {
+      let playerCoordinate = [
+        -1 * environmentX + playerStartX + playerX,
+        playerY,
+      ];
+      let enemyCoordinate = [enemyX + enemyStartX, enemyY];
+
+      if (playerCoordinate[0] > enemyCoordinate[0]) {
         setEnemyDirection("left");
       } else {
         setEnemyDirection("right");
       }
 
+      let playerToEnemyDistance = distanceFormula(
+        playerCoordinate,
+        enemyCoordinate
+      );
+
       if (
-        enemyIsUsingAttack1 &&
-        timeElapsed > mostRecentAttack1 + attack1Duration
+        playerToEnemyDistance < chaseRange &&
+        playerToEnemyDistance > attackRange
       ) {
-        setEnemyIsUsingAttack1(false);
+        setEnemyActivity("walk");
+        let modifier = playerCoordinate[0] > enemyCoordinate[0] ? 1 : -1;
+        setEnemyX(enemyX + modifier * enemyTranslationAmount);
+      } else if (
+        Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange
+      ) {
+        setEnemyActivity("attack");
+        if (enemyActivity !== "attack") {
+          setMostRecentEnemyAttack(timeElapsed);
+        }
+      } else {
         setEnemyActivity("idle");
-      } else if (enemyIsUsingAttack1) {
-        // no other actions allowed while attacking
-        return;
       }
 
-      // if (currentlyPressed.includes(attackKey1)) {
-      //   setEnemyActivity("attack");
-      //   setEnemyIsUsingAttack1(true);
-      //   setMostRecentAttack1(timeElapsed);
-      //   return;
-      // }
+      let injurePlayer =
+        enemyActivity === "attack" &&
+        timeElapsed > mostRecentEnemyAttack + timeToHurtPlayerFromAttackStart;
+
+      if (injurePlayer) {
+        setPlayerDirection(enemyDirection);
+        setPlayerActivity("hurt");
+        setMostRecentEnemyAttack(timeElapsed);
+      }
     },
-    [enemyDirection, enemyX, enemyY, enemyVY, timeElapsed]
+    [
+      enemyDirection,
+      enemyX,
+      enemyY,
+      enemyVY,
+      timeElapsed,
+      playerX,
+      playerY,
+      environmentX,
+      environmentY,
+    ]
   );
 
   return [enemyX, enemyY, enemyDirection, enemyActivity, setEnemyActivity];

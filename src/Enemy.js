@@ -7,7 +7,7 @@ import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
 const frameCounts = {
   idle: 4,
   walk: 6,
-  attack: 8,
+  attack: 6,
 };
 
 const spriteAnimationSpeeds = {
@@ -34,7 +34,10 @@ export const Enemy = ({
   timeElapsed,
 }) => {
   let spriteImageWidth = 90;
-  let extraPadding = 0;
+  let extraPadding = -10;
+  if (enemyActivity === "walk") {
+    extraPadding = -5;
+  }
 
   let [enemyStyle, enemySpriteSheet, paddingDirection] = useSpriteAnimation(
     frameCounts,
