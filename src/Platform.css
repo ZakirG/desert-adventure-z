@@ -1,0 +1,5 @@
+.platform {
+  position: absolute;
+  z-index: 15;
+  overflow: hidden;
+}

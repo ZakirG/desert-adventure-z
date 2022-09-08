@@ -27,6 +27,8 @@ export const usePlayerMovement = (
   const [playerDirection, setPlayerDirection] = useState("right");
   const [playerActivity, setPlayerActivity] = useState("idle");
 
+  let [playerOnPlatform, setPlayerOnPlatform] = useState(false);
+
   useAnimationFrame(
     (deltaTime) => {
       setTimeElapsed((timeElapsed) => timeElapsed + deltaTime / 1000);
@@ -40,7 +42,7 @@ export const usePlayerMovement = (
       if (environmentX >= -3) {
         setEnvironmentX(-3);
       }
-      if (playerY < 0 || environmentY < 0) {
+      if (playerY < 0 && environmentY < 0) {
         setPlayerY(0);
         setEnvironmentY(0);
       }
@@ -59,6 +61,8 @@ export const usePlayerMovement = (
       let playerIsJumping =
         playerActivity === "jump" || playerActivity === "double_jump";
 
+      let playerIsFalling = playerActivity === "fall";
+
       if (!playerIsJumping && currentlyPressed.includes(attackKey1)) {
         setPlayerActivity("clap_attack");
         setPlayerIsUsingAttack1(true);
@@ -74,7 +78,7 @@ export const usePlayerMovement = (
         }
 
         setPlayerDirection("left");
-        if (!playerIsJumping) {
+        if (!playerIsJumping && !playerIsFalling) {
           setPlayerActivity("walk");
         }
       } else if (currentlyPressed.includes(rightKey)) {
@@ -84,13 +88,14 @@ export const usePlayerMovement = (
           setEnvironmentX((x) => x - playerTranslationAmount);
         }
         setPlayerDirection("right");
-        if (!playerIsJumping) {
+        if (!playerIsJumping && !playerIsFalling) {
           setPlayerActivity("walk");
         }
       }
 
       if (
         !playerIsJumping &&
+        !playerIsFalling &&
         currentlyPressed.length === 0 &&
         playerActivity !== "hurt"
       ) {
@@ -127,6 +132,7 @@ export const usePlayerMovement = (
         playerActivity !== "double_jump"
       ) {
         // Initiate jump
+        setPlayerOnPlatform(false);
         setPlayerActivity("jump");
         setPlayerVY(10);
         setEnvironmentVY(-10);
@@ -135,7 +141,17 @@ export const usePlayerMovement = (
         setMostRecentJump(timeElapsed);
       } else {
         // Fall
-        if (playerY > 5.8) {
+        // console.log(
+        //   "environmentY:",
+        //   environmentY,
+        //   "environmentVY:",
+        //   environmentVY,
+        //   "playerY:",
+        //   playerY,
+        //   "playerVY:",
+        //   playerVY
+        // );
+        if ((playerY > 5.8 || environmentY > 5.8) && !playerOnPlatform) {
           setPlayerVY((vy) => vy - playerWeight);
           setPlayerY((y) => y + playerVY);
           setEnvironmentVY((vy) => vy + playerWeight);
@@ -145,7 +161,7 @@ export const usePlayerMovement = (
           setPlayerVY(0);
           setPlayerY(0);
           setEnvironmentVY(0);
-          if (playerIsJumping) {
+          if (playerIsJumping || playerIsFalling) {
             setPlayerActivity("idle");
           }
         }
@@ -157,15 +173,19 @@ export const usePlayerMovement = (
   return [
     playerX,
     playerY,
+    setPlayerY,
     playerDirection,
     setPlayerDirection,
     playerActivity,
     setPlayerActivity,
     environmentX,
     environmentY,
+    setEnvironmentY,
     playerVY,
     setPlayerVY,
     setEnvironmentVY,
+    playerOnPlatform,
+    setPlayerOnPlatform,
     timeElapsed,
   ];
 };

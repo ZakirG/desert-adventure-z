@@ -10,7 +10,7 @@ const frameCounts = {
 
 const spriteAnimationSpeeds = {
   idle: 12,
-  collecting: 8,
+  collecting: 6,
 };
 
 const activitiesForSprite = {

@@ -4,6 +4,7 @@ import { distanceFormula } from "../utils.js";
 
 export const useCoinBehavior = (
   coins,
+  coinGroundY,
   playerX,
   playerY,
   playerStartX,
@@ -40,7 +41,7 @@ export const useCoinBehavior = (
         }
         let playerCoordinate = [
           -1 * environmentX + playerStartX + playerX,
-          playerY + 139 + environmentY, // TODO: figure out why this hacky math is necessary
+          playerY + coinGroundY + environmentY, // TODO: figure out why this hacky math is necessary
         ];
         let coinCoordinate = [coins[i].x, coins[i].y];
 

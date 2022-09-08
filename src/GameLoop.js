@@ -1,9 +1,11 @@
 import { useCurrentlyPressed } from "./hooks/useCurrentlyPressed";
 import { usePlayerMovement } from "./hooks/usePlayerMovement";
 import { useEnemyAI } from "./hooks/useEnemyAI";
+import { usePlatformPhysics } from "./hooks/usePlatformPhysics";
 import { useCoinBehavior } from "./hooks/useCoinBehavior";
 import { Player } from "./Player";
 import { Enemy } from "./Enemy";
+import { Platform } from "./Platform";
 import { HUD } from "./HUD";
 import { Coin } from "./Coin";
 import { Environment } from "./Environment";
@@ -26,7 +28,7 @@ export const GameLoop = () => {
   const currentlyPressed = useCurrentlyPressed(controls);
 
   let playerWeight = 0.5;
-  let playerSpeed = 6;
+  let playerSpeed = 5.5;
 
   let undergroundHeight = 100;
 
@@ -35,22 +37,26 @@ export const GameLoop = () => {
   let [
     playerX,
     playerY,
+    setPlayerY,
     playerDirection,
     setPlayerDirection,
     playerActivity,
     setPlayerActivity,
     environmentX,
     environmentY,
+    setEnvironmentY,
     playerVY,
     setPlayerVY,
     setEnvironmentVY,
+    playerOnPlatform,
+    setPlayerOnPlatform,
     timeElapsed,
   ] = usePlayerMovement(playerWeight, playerSpeed, currentlyPressed, controls);
 
   let enemySpeed = 1.5;
   let attackRange = 45;
   let chaseRange = 320;
-  let [enemyStartX, enemyStartY] = [700, 136];
+  let [enemyStartX, enemyStartY] = [700, 55];
 
   let [enemyX, enemyY, enemyDirection, enemyActivity, setEnemyActivity] =
     useEnemyAI(
@@ -74,13 +80,16 @@ export const GameLoop = () => {
       timeElapsed
     );
 
-  let coinGroundY = 135;
+  let coinGroundY = 53;
   let range = (n) => [...Array(n).keys()];
   let coinXs = range(13).map((i) => i * 50 + 450);
   let groundCoins = coinXs.map((x, i) => ({ x: x, y: coinGroundY + 40 * i }));
-  let coins = [...groundCoins];
+  let platformCoins = [{ x: 1282, y: 257 }];
+
+  let coins = [...groundCoins, ...platformCoins];
   coins = useCoinBehavior(
     coins,
+    coinGroundY,
     playerX,
     playerY,
     playerStartX,
@@ -93,6 +102,25 @@ export const GameLoop = () => {
   let numCoinsCollected = coins.filter(
     (coin) => coin.activity === "collected"
   ).length;
+
+  let platforms = [{ width: 1, height: 1, platformX: 1200, platformY: 200 }];
+  usePlatformPhysics(
+    platforms[0],
+    playerStartX,
+    playerX,
+    playerY,
+    setPlayerY,
+    environmentX,
+    environmentY,
+    setEnvironmentY,
+    setPlayerActivity,
+    playerVY,
+    setPlayerVY,
+    setEnvironmentVY,
+    playerOnPlatform,
+    setPlayerOnPlatform,
+    timeElapsed
+  );
 
   return (
     <>
@@ -125,6 +153,17 @@ export const GameLoop = () => {
               timeElapsed={timeElapsed}
               key={index}
             ></Coin>
+          );
+        })}
+        {platforms.map((platform, index) => {
+          return (
+            <Platform
+              platformX={platform.platformX}
+              platformY={platform.platformY}
+              width={platform.width}
+              height={platform.height}
+              key={index}
+            ></Platform>
           );
         })}
       </Environment>

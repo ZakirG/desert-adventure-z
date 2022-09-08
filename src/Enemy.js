@@ -74,6 +74,10 @@ export const Enemy = ({
     enemyStyle.bottom = "-10px";
   }
 
+  if (enemyActivity === "gone") {
+    return;
+  }
+
   return (
     <div
       id="enemy-div"

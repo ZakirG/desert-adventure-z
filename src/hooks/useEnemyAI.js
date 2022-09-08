@@ -47,9 +47,11 @@ export const useEnemyAI = (
 
       let playerCoordinate = [
         -1 * environmentX + playerStartX + playerX,
-        playerY,
+        playerY + environmentY,
       ];
       let enemyCoordinate = [enemyX + enemyStartX, enemyY];
+
+      // console.log("player coordinate: ", playerCoordinate);
 
       if (
         enemyActivity === "death" &&
@@ -139,7 +141,10 @@ export const useEnemyAI = (
 
       let injurePlayer =
         enemyActivity === "attack" &&
+        playerToEnemyDistance < attackRange &&
         timeElapsed > mostRecentEnemyAttack + timeToHurtPlayerFromAttackStart;
+
+      // console.log("player Y: ", playerY, "enemy Y: ", enemyY);
 
       if (injurePlayer) {
         setPlayerDirection(enemyDirection);
