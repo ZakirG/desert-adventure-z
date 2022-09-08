@@ -1,22 +1,14 @@
 import { useCurrentlyPressed } from "./hooks/useCurrentlyPressed";
 import { usePlayerMovement } from "./hooks/usePlayerMovement";
 import { useEnemyAI } from "./hooks/useEnemyAI";
+import { useCoinBehavior } from "./hooks/useCoinBehavior";
 import { Player } from "./Player";
 import { Enemy } from "./Enemy";
+import { Coin } from "./Coin";
 import { Environment } from "./Environment";
 import background_1 from "./assets/backgrounds/1/background.png";
 
-let WASDcontrols = {
-  downKey: "KeyS",
-  upKey: "KeyW",
-  leftKey: "KeyA",
-  rightKey: "KeyD",
-  jumpKey: "Space",
-  attackKey1: "KeyL",
-  attackKey2: "KeyK",
-};
-
-let ArrowControls = {
+let controls = {
   downKey: "ArrowDown",
   upKey: "ArrowUp",
   leftKey: "ArrowLeft",
@@ -29,7 +21,6 @@ let ArrowControls = {
 export const GameLoop = () => {
   let gameHeight = 720;
   let gameWidth = 800;
-  let controls = ArrowControls;
   const currentlyPressed = useCurrentlyPressed(controls);
 
   let playerWeight = 0.5;
@@ -46,12 +37,14 @@ export const GameLoop = () => {
     setPlayerActivity,
     environmentX,
     environmentY,
+    setPlayerVY,
+    setEnvironmentVY,
     timeElapsed,
   ] = usePlayerMovement(playerWeight, playerSpeed, currentlyPressed, controls);
 
   let enemySpeed = 1.5;
   let attackRange = 45;
-  let chaseRange = 300;
+  let chaseRange = 320;
   let [enemyStartX, enemyStartY] = [700, 136];
 
   let [enemyX, enemyY, enemyDirection, enemyActivity, setEnemyActivity] =
@@ -70,8 +63,26 @@ export const GameLoop = () => {
       playerActivity,
       setPlayerActivity,
       setPlayerDirection,
+      setPlayerVY,
+      setEnvironmentVY,
       timeElapsed
     );
+
+  let coinGroundY = 139;
+  let range = (n) => [...Array(n).keys()];
+  let coinXs = range(10).map((i) => i * 50 + 450);
+  let groundCoins = coinXs.map((x, i) => ({ x: x, y: coinGroundY + 40 * i }));
+  let coins = [...groundCoins];
+  coins = useCoinBehavior(
+    coins,
+    playerX,
+    playerY,
+    playerStartX,
+    playerStartY,
+    environmentX,
+    environmentY,
+    timeElapsed
+  );
 
   return (
     <>
@@ -93,6 +104,17 @@ export const GameLoop = () => {
           enemyActivity={enemyActivity}
           timeElapsed={timeElapsed}
         ></Enemy>
+        {coins.map((coin, index) => {
+          return (
+            <Coin
+              coinStartX={coin.x}
+              coinStartY={coin.y}
+              coinActivity={coin.activity}
+              timeElapsed={timeElapsed}
+              key={index}
+            ></Coin>
+          );
+        })}
       </Environment>
       <Player
         playerDirection={playerDirection}

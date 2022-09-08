@@ -1,8 +1,13 @@
 #environment-div {
   position: absolute;
-  z-index: 0;
+  /* z-index: 0; */
 }
 
-#environment-img {
-  position: relative;
+/* #environment-img {
+  position: absolute;
+  white-space: nowrap;
 }
+
+#environment-div div {
+  display: inline-block;
+} */

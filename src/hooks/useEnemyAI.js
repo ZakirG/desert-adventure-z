@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAnimationFrame } from "./useAnimationFrame";
-
-let distanceFormula = (point1, point2) => {
-  let [x1, x2] = point1;
-  let [y1, y2] = point2;
-  return Math.sqrt(Math.pow(x2 - y2, 2) + Math.pow(x1 - y1, 2));
-};
+import { distanceFormula } from "../utils.js";
 
 export const useEnemyAI = (
   enemyType,
@@ -22,14 +17,15 @@ export const useEnemyAI = (
   playerActivity,
   setPlayerActivity,
   setPlayerDirection,
+  setPlayerVY,
+  setEnvironmentVY,
   timeElapsed
 ) => {
-  let [mostRecentJump, setMostRecentJump] = useState(0);
-
-  let [mostRecentEnemyAttack, setMostRecentEnemyAttack] = useState(false);
+  let [mostRecentEnemyAttack, setMostRecentEnemyAttack] = useState(0);
+  let [mostRecentDirectionChange, setMostRecentDirectionChange] = useState(0);
   let timeToHurtPlayerFromAttackStart = 0.3; // todo: parametrize this
-  let coolDownBetweenAttacks = 1.5; // todo: parametrize this
-  let attackPhaseDuration = 1.4; // todo: make this a list with multiple possible values to be chosen at random
+  let coolDownBetweenAttacks = 1.5;
+  let directionChangeCoolDown = 1;
 
   const [enemyDirection, setEnemyDirection] = useState("right");
   const [enemyActivity, setEnemyActivity] = useState("idle");
@@ -37,6 +33,12 @@ export const useEnemyAI = (
   let [enemyX, setEnemyX] = useState(0);
   let [enemyY, setEnemyY] = useState(0);
   let [enemyVY, setEnemyVY] = useState(0);
+
+  let [enemyDeathTime, setEnemyDeathTime] = useState(0);
+  let timeForEnemyToDie = 1.5;
+
+  let [enemyDisappearTime, setEnemyDisappearTime] = useState(0);
+  let timeForEnemyToDisappear = 0.6;
 
   useAnimationFrame(
     (deltaTime) => {
@@ -48,10 +50,51 @@ export const useEnemyAI = (
       ];
       let enemyCoordinate = [enemyX + enemyStartX, enemyY];
 
-      if (playerCoordinate[0] > enemyCoordinate[0]) {
+      if (
+        enemyActivity === "death" &&
+        timeElapsed > enemyDeathTime + timeForEnemyToDie
+      ) {
+        setEnemyActivity("disappear");
+        setEnemyDisappearTime(timeElapsed);
+        return;
+      } else if (enemyActivity === "death") {
+        return;
+      }
+
+      if (
+        enemyActivity === "disappear" &&
+        timeElapsed > enemyDisappearTime + timeForEnemyToDisappear
+      ) {
+        setEnemyActivity("gone");
+        return;
+      } else if (enemyActivity === "disappear") {
+        return;
+      } else if (enemyActivity === "gone") {
+        return;
+      }
+
+      let playerIsToRightAndEnemyIsFacingRight =
+        playerCoordinate[0] > enemyCoordinate[0] && enemyDirection === "left";
+      let playerIsToLeftAndEnemyIsFacingLeft =
+        playerCoordinate[0] <= enemyCoordinate[0] && enemyDirection === "right";
+      let enemyIsFacingCorrectDirection =
+        playerIsToRightAndEnemyIsFacingRight ||
+        playerIsToLeftAndEnemyIsFacingLeft;
+
+      if (
+        playerCoordinate[0] > enemyCoordinate[0] &&
+        timeElapsed > mostRecentDirectionChange + directionChangeCoolDown
+      ) {
         setEnemyDirection("left");
-      } else {
+        setMostRecentDirectionChange(timeElapsed);
+        enemyIsFacingCorrectDirection = true;
+      } else if (
+        timeElapsed >
+        mostRecentDirectionChange + directionChangeCoolDown
+      ) {
         setEnemyDirection("right");
+        setMostRecentDirectionChange(timeElapsed);
+        enemyIsFacingCorrectDirection = true;
       }
 
       let playerToEnemyDistance = distanceFormula(
@@ -61,13 +104,15 @@ export const useEnemyAI = (
 
       if (
         playerToEnemyDistance < chaseRange &&
-        playerToEnemyDistance > attackRange
+        playerToEnemyDistance > attackRange &&
+        enemyIsFacingCorrectDirection
       ) {
         setEnemyActivity("walk");
         let modifier = playerCoordinate[0] > enemyCoordinate[0] ? 1 : -1;
         setEnemyX(enemyX + modifier * enemyTranslationAmount);
       } else if (
-        Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange
+        Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
+        enemyIsFacingCorrectDirection
       ) {
         setEnemyActivity("attack");
         if (enemyActivity !== "attack") {
@@ -77,6 +122,20 @@ export const useEnemyAI = (
         setEnemyActivity("idle");
       }
 
+      if (
+        playerCoordinate[1] > enemyCoordinate[1] + 4 &&
+        playerToEnemyDistance < attackRange &&
+        Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
+        enemyActivity !== "death"
+      ) {
+        console.log("enemy dies.");
+        setEnemyActivity("death");
+        setEnemyDeathTime(timeElapsed);
+        setPlayerVY(8);
+        setEnvironmentVY(-8);
+        setPlayerActivity("double_jump");
+      }
+
       let injurePlayer =
         enemyActivity === "attack" &&
         timeElapsed > mostRecentEnemyAttack + timeToHurtPlayerFromAttackStart;
@@ -84,7 +143,7 @@ export const useEnemyAI = (
       if (injurePlayer) {
         setPlayerDirection(enemyDirection);
         setPlayerActivity("hurt");
-        setMostRecentEnemyAttack(timeElapsed);
+        setMostRecentEnemyAttack(timeElapsed + coolDownBetweenAttacks);
       }
     },
     [

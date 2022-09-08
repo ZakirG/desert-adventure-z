@@ -5,6 +5,7 @@ import punk_hurt from "./assets/main-characters/punk/Punk_hurt.png";
 import punk_jump from "./assets/main-characters/punk/Punk_jump.png";
 import punk_double_jump from "./assets/main-characters/punk/Punk_double_jump.png";
 import punk_clap_attack from "./assets/main-characters/punk/Punk_attack3.png";
+import punk_punch from "./assets/main-characters/punk/Punk_run_attack.png";
 import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
 
 const frameCounts = {
@@ -14,6 +15,7 @@ const frameCounts = {
   hurt: 2,
   double_jump: 6,
   clap_attack: 8,
+  punch: 6,
 };
 
 const spriteAnimationSpeeds = {
@@ -23,6 +25,7 @@ const spriteAnimationSpeeds = {
   jump: 8,
   double_jump: 8,
   clap_attack: 12,
+  punch: 12,
 };
 
 const activitiesForSprite = {
@@ -32,6 +35,7 @@ const activitiesForSprite = {
   hurt: punk_hurt,
   double_jump: punk_double_jump,
   clap_attack: punk_clap_attack,
+  punch: punk_punch,
 };
 
 export const Player = ({
@@ -53,6 +57,7 @@ export const Player = ({
     playerActivity,
     playerDirection,
     spriteImageWidth,
+    false,
     extraPadding,
     timeElapsed
   );

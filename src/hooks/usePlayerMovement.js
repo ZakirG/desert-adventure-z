@@ -128,8 +128,8 @@ export const usePlayerMovement = (
       ) {
         // Initiate jump
         setPlayerActivity("jump");
-        setPlayerVY(10);
-        setEnvironmentVY(-10);
+        setPlayerVY(8);
+        setEnvironmentVY(-8);
         setPlayerY((y) => y + 6);
         setEnvironmentY((y) => y - 6);
         setMostRecentJump(timeElapsed);
@@ -143,6 +143,7 @@ export const usePlayerMovement = (
         } else {
           // End the jump
           setPlayerVY(0);
+          setPlayerY(0);
           setEnvironmentVY(0);
           if (playerIsJumping) {
             setPlayerActivity("idle");
@@ -162,6 +163,8 @@ export const usePlayerMovement = (
     setPlayerActivity,
     environmentX,
     environmentY,
+    setPlayerVY,
+    setEnvironmentVY,
     timeElapsed,
   ];
 };

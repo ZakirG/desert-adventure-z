@@ -7,6 +7,7 @@ export const useSpriteAnimation = (
   creatureActivity,
   creatureDirection,
   spriteImageWidth,
+  stopOnLastFrame,
   extraPadding,
   timeElapsed
 ) => {
@@ -27,8 +28,16 @@ export const useSpriteAnimation = (
     lastFrameChange.current = timeElapsed;
     incrementor = 1;
   }
-  let creatureSpriteFrameNumber =
-    (previousFrameRef.current + incrementor) % totalNumberOfFrames;
+
+  let creatureSpriteFrameNumber = previousFrameRef.current + incrementor;
+  if (stopOnLastFrame) {
+    console.log(creatureSpriteFrameNumber);
+  }
+
+  if (stopOnLastFrame && creatureSpriteFrameNumber >= totalNumberOfFrames - 1) {
+    creatureSpriteFrameNumber = totalNumberOfFrames - 1;
+  }
+  creatureSpriteFrameNumber = creatureSpriteFrameNumber % totalNumberOfFrames;
 
   previousFrameRef.current = creatureSpriteFrameNumber;
 

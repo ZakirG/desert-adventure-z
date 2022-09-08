@@ -1,0 +1,8 @@
+#coin-div {
+  position: absolute;
+  width: 20px;
+  height: 29px;
+  /* background-color: red; */
+  z-index: 20;
+  overflow: hidden;
+}
