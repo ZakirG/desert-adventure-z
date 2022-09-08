@@ -128,8 +128,8 @@ export const usePlayerMovement = (
       ) {
         // Initiate jump
         setPlayerActivity("jump");
-        setPlayerVY(8);
-        setEnvironmentVY(-8);
+        setPlayerVY(10);
+        setEnvironmentVY(-10);
         setPlayerY((y) => y + 6);
         setEnvironmentY((y) => y - 6);
         setMostRecentJump(timeElapsed);

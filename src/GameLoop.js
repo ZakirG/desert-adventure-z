@@ -27,7 +27,9 @@ export const GameLoop = () => {
   let playerWeight = 0.5;
   let playerSpeed = 3.4;
 
-  let [playerStartX, playerStartY] = [350, -600];
+  let undergroundHeight = 100;
+
+  let [playerStartX, playerStartY] = [350, -600 + undergroundHeight];
 
   let [
     playerX,
@@ -73,7 +75,7 @@ export const GameLoop = () => {
 
   let coinGroundY = 139;
   let range = (n) => [...Array(n).keys()];
-  let coinXs = range(10).map((i) => i * 50 + 450);
+  let coinXs = range(13).map((i) => i * 50 + 450);
   let groundCoins = coinXs.map((x, i) => ({ x: x, y: coinGroundY + 40 * i }));
   let coins = [...groundCoins];
   coins = useCoinBehavior(
@@ -100,6 +102,7 @@ export const GameLoop = () => {
         gameHeight={gameHeight}
         gameWidth={gameWidth}
         imageSource={background_1}
+        undergroundHeight={undergroundHeight}
       >
         <Enemy
           enemyType="hyena"

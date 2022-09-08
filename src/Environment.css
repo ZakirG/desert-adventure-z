@@ -3,11 +3,12 @@
   /* z-index: 0; */
 }
 
-/* #environment-img {
+#underground {
   position: absolute;
-  white-space: nowrap;
+  left: 0px;
+  z-index: 0;
+  width: 8000px;
+  background-repeat: repeat;
+  background: white;
+  background-image: url(./assets/tiles/Tile_24.png);
 }
-
-#environment-div div {
-  display: inline-block;
-} */
