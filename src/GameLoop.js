@@ -58,27 +58,28 @@ export const GameLoop = () => {
   let chaseRange = 320;
   let [enemyStartX, enemyStartY] = [700, 55];
 
-  let [enemyX, enemyY, enemyDirection, enemyActivity, setEnemyActivity] =
-    useEnemyAI(
-      "hyena",
-      enemyStartX,
-      enemyStartY,
-      playerStartX,
-      playerX,
-      playerY,
-      environmentX,
-      environmentY,
-      enemySpeed,
-      attackRange,
-      chaseRange,
-      playerActivity,
-      setPlayerActivity,
-      setPlayerDirection,
-      playerVY,
-      setPlayerVY,
-      setEnvironmentVY,
-      timeElapsed
-    );
+  let enemies = [{ startX: 700, startY: 55 }];
+  let setEnemyActivity;
+  [enemies, setEnemyActivity] = useEnemyAI(
+    enemies,
+    enemyStartX,
+    enemyStartY,
+    playerStartX,
+    playerX,
+    playerY,
+    environmentX,
+    environmentY,
+    enemySpeed,
+    attackRange,
+    chaseRange,
+    playerActivity,
+    setPlayerActivity,
+    setPlayerDirection,
+    playerVY,
+    setPlayerVY,
+    setEnvironmentVY,
+    timeElapsed
+  );
 
   let coinGroundY = 53;
   let range = (n) => [...Array(n).keys()];
@@ -134,16 +135,22 @@ export const GameLoop = () => {
         imageSource2={background_1_flip}
         undergroundHeight={undergroundHeight}
       >
-        <Enemy
-          enemyType="hyena"
-          enemyX={enemyX}
-          enemyY={enemyY}
-          enemyStartX={enemyStartX}
-          enemyStartY={enemyStartY}
-          enemyDirection={enemyDirection}
-          enemyActivity={enemyActivity}
-          timeElapsed={timeElapsed}
-        ></Enemy>
+        {enemies.map((enemy, index) => {
+          return (
+            <Enemy
+              enemyType={enemy.type}
+              enemyX={enemy.x}
+              enemyY={enemy.y}
+              enemyStartX={enemy.startX}
+              enemyStartY={enemy.startY}
+              enemyDirection={enemy.direction}
+              enemyActivity={enemy.activity}
+              timeElapsed={timeElapsed}
+              key={index}
+            ></Enemy>
+          );
+        })}
+
         {coins.map((coin, index) => {
           return (
             <Coin
