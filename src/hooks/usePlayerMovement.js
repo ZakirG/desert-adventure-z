@@ -163,6 +163,7 @@ export const usePlayerMovement = (
     setPlayerActivity,
     environmentX,
     environmentY,
+    playerVY,
     setPlayerVY,
     setEnvironmentVY,
     timeElapsed,

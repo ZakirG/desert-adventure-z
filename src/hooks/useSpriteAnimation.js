@@ -30,9 +30,6 @@ export const useSpriteAnimation = (
   }
 
   let creatureSpriteFrameNumber = previousFrameRef.current + incrementor;
-  if (stopOnLastFrame) {
-    console.log(creatureSpriteFrameNumber);
-  }
 
   if (stopOnLastFrame && creatureSpriteFrameNumber >= totalNumberOfFrames - 1) {
     creatureSpriteFrameNumber = totalNumberOfFrames - 1;

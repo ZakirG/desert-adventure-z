@@ -17,6 +17,7 @@ export const useEnemyAI = (
   playerActivity,
   setPlayerActivity,
   setPlayerDirection,
+  playerVY,
   setPlayerVY,
   setEnvironmentVY,
   timeElapsed
@@ -35,7 +36,7 @@ export const useEnemyAI = (
   let [enemyVY, setEnemyVY] = useState(0);
 
   let [enemyDeathTime, setEnemyDeathTime] = useState(0);
-  let timeForEnemyToDie = 1.5;
+  let timeForEnemyToDie = 3;
 
   let [enemyDisappearTime, setEnemyDisappearTime] = useState(0);
   let timeForEnemyToDisappear = 0.6;
@@ -126,9 +127,9 @@ export const useEnemyAI = (
         playerCoordinate[1] > enemyCoordinate[1] + 4 &&
         playerToEnemyDistance < attackRange &&
         Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
+        playerVY < 0 &&
         enemyActivity !== "death"
       ) {
-        console.log("enemy dies.");
         setEnemyActivity("death");
         setEnemyDeathTime(timeElapsed);
         setPlayerVY(8);

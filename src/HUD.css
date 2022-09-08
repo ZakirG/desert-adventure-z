@@ -1,0 +1,23 @@
+.HUD {
+  position: relative;
+  /* top: 20px; */
+  top: -75px;
+  left: 10px;
+  z-index: 1000;
+  color: white;
+  font-weight: bold;
+}
+
+.coin-counter {
+  width: 550px;
+  text-align: left;
+}
+
+.coin-counter-icon {
+  overflow: hidden;
+  width: 30px;
+  display: inline-block;
+  margin: 0;
+  top: 10px;
+  position: relative;
+}

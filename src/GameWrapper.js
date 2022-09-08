@@ -6,6 +6,7 @@ import { GameLoop } from "./GameLoop";
 const GameContainer = styled.div`
   position: absolute;
   width: 800px;
+  // height: 600px;
   height: 720px;
   border: 1px solid #eee;
   overflow: hidden;
@@ -23,10 +24,17 @@ const GameContainer = styled.div`
   }
 `;
 
+// const GameView = styled.div`
+//   position: relative;
+//   bottom: 100px;
+// `;
+
 export const GameWrapper = () => {
   return (
     <GameContainer>
+      {/* <GameView> */}
       <GameLoop />
+      {/* </GameView> */}
     </GameContainer>
   );
 };

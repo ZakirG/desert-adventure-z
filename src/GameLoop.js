@@ -4,6 +4,7 @@ import { useEnemyAI } from "./hooks/useEnemyAI";
 import { useCoinBehavior } from "./hooks/useCoinBehavior";
 import { Player } from "./Player";
 import { Enemy } from "./Enemy";
+import { HUD } from "./HUD";
 import { Coin } from "./Coin";
 import { Environment } from "./Environment";
 import background_1 from "./assets/backgrounds/1/background.png";
@@ -24,7 +25,7 @@ export const GameLoop = () => {
   const currentlyPressed = useCurrentlyPressed(controls);
 
   let playerWeight = 0.5;
-  let playerSpeed = 3;
+  let playerSpeed = 3.4;
 
   let [playerStartX, playerStartY] = [350, -600];
 
@@ -37,6 +38,7 @@ export const GameLoop = () => {
     setPlayerActivity,
     environmentX,
     environmentY,
+    playerVY,
     setPlayerVY,
     setEnvironmentVY,
     timeElapsed,
@@ -63,6 +65,7 @@ export const GameLoop = () => {
       playerActivity,
       setPlayerActivity,
       setPlayerDirection,
+      playerVY,
       setPlayerVY,
       setEnvironmentVY,
       timeElapsed
@@ -83,6 +86,10 @@ export const GameLoop = () => {
     environmentY,
     timeElapsed
   );
+
+  let numCoinsCollected = coins.filter(
+    (coin) => coin.activity === "collected"
+  ).length;
 
   return (
     <>
@@ -125,6 +132,7 @@ export const GameLoop = () => {
         playerStartY={playerStartY}
         timeElapsed={timeElapsed}
       ></Player>
+      <HUD numCoinsCollected={numCoinsCollected}></HUD>
     </>
   );
 };
