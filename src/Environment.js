@@ -3,6 +3,7 @@ import rock from "./assets/tiles/Tile_24.png";
 
 export const Environment = ({
   imageSource,
+  imageSource2,
   environmentX,
   environmentY,
   children,
@@ -13,9 +14,17 @@ export const Environment = ({
     <>
       <div
         id="environment-div"
-        style={{ top: envY + "px", left: environmentX }}
+        style={{
+          top: envY + "px",
+          left: environmentX,
+          backgroundImage: imageSource,
+          backgroundRepeat: "repeat",
+        }}
       >
-        <img src={imageSource} id="environment-img" />
+        <div className="environment-background">
+          <img src={imageSource} />
+          <img src={imageSource2} />
+        </div>
         {children}
       </div>
       <div
@@ -26,9 +35,7 @@ export const Environment = ({
           left: environmentX,
           height: undergroundHeight + "px",
         }}
-      >
-        {/* <img src={rock} id="environment-img" /> */}
-      </div>
+      ></div>
     </>
   );
 };

@@ -23,7 +23,7 @@ const spriteAnimationSpeeds = {
   attack: 12,
   hurt: 6,
   death: 6,
-  disappear: 16,
+  disappear: 20,
 };
 
 const activitiesForSprite = {

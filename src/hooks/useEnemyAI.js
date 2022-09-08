@@ -36,7 +36,7 @@ export const useEnemyAI = (
   let [enemyVY, setEnemyVY] = useState(0);
 
   let [enemyDeathTime, setEnemyDeathTime] = useState(0);
-  let timeForEnemyToDie = 3;
+  let timeForEnemyToDie = 1;
 
   let [enemyDisappearTime, setEnemyDisappearTime] = useState(0);
   let timeForEnemyToDisappear = 0.6;

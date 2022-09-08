@@ -7,7 +7,8 @@ import { Enemy } from "./Enemy";
 import { HUD } from "./HUD";
 import { Coin } from "./Coin";
 import { Environment } from "./Environment";
-import background_1 from "./assets/backgrounds/1/background.png";
+import background_1 from "./assets/backgrounds/background1.png";
+import background_1_flip from "./assets/backgrounds/background1flip.png";
 
 let controls = {
   downKey: "ArrowDown",
@@ -25,7 +26,7 @@ export const GameLoop = () => {
   const currentlyPressed = useCurrentlyPressed(controls);
 
   let playerWeight = 0.5;
-  let playerSpeed = 3.4;
+  let playerSpeed = 6;
 
   let undergroundHeight = 100;
 
@@ -73,7 +74,7 @@ export const GameLoop = () => {
       timeElapsed
     );
 
-  let coinGroundY = 139;
+  let coinGroundY = 135;
   let range = (n) => [...Array(n).keys()];
   let coinXs = range(13).map((i) => i * 50 + 450);
   let groundCoins = coinXs.map((x, i) => ({ x: x, y: coinGroundY + 40 * i }));
@@ -102,6 +103,7 @@ export const GameLoop = () => {
         gameHeight={gameHeight}
         gameWidth={gameWidth}
         imageSource={background_1}
+        imageSource2={background_1_flip}
         undergroundHeight={undergroundHeight}
       >
         <Enemy

@@ -1,6 +1,7 @@
 #environment-div {
   position: absolute;
   /* z-index: 0; */
+  /* background-image: url(./assets/tiles/Tile_24.png); */
 }
 
 #underground {
@@ -11,4 +12,27 @@
   background-repeat: repeat;
   background: white;
   background-image: url(./assets/tiles/Tile_24.png);
+}
+
+.environment-background {
+  position: relative;
+  margin-bottom: 5px;
+  width: 800000px;
+  display: flex;
+
+  /* position: relative;
+  height: 0;
+  width: 0;
+  /* display: inline; */
+  float: left;
+  /* left: 0px;
+  z-index: 0;
+  width: 8000px;
+  background-repeat: repeat;
+  background: white;
+  background-image: url(./assets/tiles/Tile_24.png); */
+}
+
+.environment-background img {
+  display: inline-block;
 }
