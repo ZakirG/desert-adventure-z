@@ -65,7 +65,7 @@ export const Player = ({
     extraPadding,
     timeElapsed
   );
-
+  console.log("player activity", playerActivity);
   return (
     <div
       id="player-div"

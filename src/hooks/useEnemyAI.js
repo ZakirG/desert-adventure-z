@@ -3,16 +3,13 @@ import { useAnimationFrame } from "./useAnimationFrame";
 import { distanceFormula } from "../utils.js";
 
 function arraySetter(stateArray, setFunction, newValue, index) {
-  console.log("array setter to ", newValue);
-  let clone = [...stateArray];
+  let clone = stateArray.slice();
   clone[index] = newValue;
-  setFunction(clone);
+  setFunction((x) => [...clone]);
 }
 
 export const useEnemyAI = (
   enemies,
-  enemyStartX,
-  enemyStartY,
   playerStartX,
   playerX,
   playerY,
@@ -41,9 +38,10 @@ export const useEnemyAI = (
   let coolDownBetweenAttacks = 1.5;
   let directionChangeCoolDown = 1;
 
-  const [enemyDirection, setEnemyDirection] = useState(
+  let [enemyDirection, setEnemyDirection] = useState(
     Array(numEnemies).fill("right")
   );
+
   const [enemyActivity, setEnemyActivity] = useState(
     Array(numEnemies).fill("idle")
   );
@@ -62,79 +60,94 @@ export const useEnemyAI = (
 
   useAnimationFrame(
     (deltaTime) => {
+      // enemyActivity[0] = "walk";
+      // setEnemyActivity((x) => ["walk", "walk", "walk"]);
+      // arraySetter(enemyActivity, setEnemyActivity, "walk", 0);
+      // arraySetter(enemyActivity, setEnemyActivity, "walk", 1);
+      // arraySetter(enemyActivity, setEnemyActivity, "walk", 2);
+
+      // console.log(enemyActivity);
       let enemyTranslationAmount = enemySpeed * deltaTime * 0.1;
 
       let playerCoordinate = [
-        -1 * environmentX + playerStartX + playerX,
-        playerY + environmentY,
+        -1 * environmentX + playerStartX + playerX + 20,
+        playerY + environmentY + 55,
       ];
 
+      let enemyActivityClone = enemyActivity.slice();
+      let enemyDisappearTimeClone = enemyDisappearTime.slice();
+      let enemyDeathTimeClone = enemyDeathTime.slice();
+      let mostRecentDirectionChangeClone = mostRecentDirectionChange.slice();
+      let mostRecentEnemyAttackClone = mostRecentEnemyAttack.slice();
+      let enemyDirectionClone = enemyDirection.slice();
+      let playerShouldBeHurt = false;
       for (let i = 0; i < numEnemies; i++) {
-        let enemyCoordinate = [enemyX[i] + enemyStartX[i], enemyY[i]];
-
-        // console.log("player coordinate: ", playerCoordinate);
+        let enemyCoordinate = [
+          enemyX[i] + enemies[i].startX,
+          enemyY[i] + enemies[i].startY,
+        ];
 
         if (
-          enemyActivity[i] === "death" &&
-          timeElapsed > enemyDeathTime[i] + timeForEnemyToDie
+          enemyActivityClone[i] === "death" &&
+          timeElapsed > enemyDeathTimeClone[i] + timeForEnemyToDie
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "disappear", i);
-          arraySetter(
-            enemyDisappearTime,
-            setEnemyDisappearTime,
-            timeElapsed,
-            i
-          );
-          return;
-        } else if (enemyActivity[i] === "death") {
-          return;
+          // arraySetter(enemyActivity, setEnemyActivity, "disappear", i);
+          enemyActivityClone[i] = "disappear";
+          enemyDisappearTimeClone[i] = timeElapsed;
+          continue;
+        } else if (enemyActivityClone[i] === "death") {
+          continue;
         }
 
         if (
-          enemyActivity[i] === "disappear" &&
-          timeElapsed > enemyDisappearTime[i] + timeForEnemyToDisappear
+          enemyActivityClone[i] === "disappear" &&
+          timeElapsed > enemyDisappearTimeClone[i] + timeForEnemyToDisappear
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "gone", i);
-          return;
-        } else if (enemyActivity[i] === "disappear") {
-          return;
-        } else if (enemyActivity[i] === "gone") {
-          return;
+          // arraySetter(enemyActivity, setEnemyActivity, "gone", i);
+          enemyActivityClone[i] = "gone";
+          continue;
+        } else if (enemyActivityClone[i] === "disappear") {
+          continue;
+        } else if (enemyActivityClone[i] === "gone") {
+          continue;
         }
 
         let playerIsToRightAndEnemyIsFacingRight =
           playerCoordinate[0] > enemyCoordinate[0] &&
-          enemyDirection[i] === "left";
+          enemyDirectionClone[i] === "left";
         let playerIsToLeftAndEnemyIsFacingLeft =
           playerCoordinate[0] <= enemyCoordinate[0] &&
-          enemyDirection[i] === "right";
+          enemyDirectionClone[i] === "right";
         let enemyIsFacingCorrectDirection =
           playerIsToRightAndEnemyIsFacingRight ||
           playerIsToLeftAndEnemyIsFacingLeft;
 
         if (
           playerCoordinate[0] > enemyCoordinate[0] &&
-          timeElapsed > mostRecentDirectionChange[i] + directionChangeCoolDown
+          timeElapsed >
+            mostRecentDirectionChangeClone[i] + directionChangeCoolDown
         ) {
           arraySetter(enemyDirection, setEnemyDirection, "left", i);
-          arraySetter(
-            enemyDisappearTime,
-            setEnemyDisappearTime,
-            timeElapsed,
-            i
-          );
+          mostRecentDirectionChangeClone[i] = timeElapsed;
+          // arraySetter(
+          //   mostRecentDirectionChangeClone,
+          //   setMostRecentDirectionChange,
+          //   timeElapsed,
+          //   i
+          // );
           enemyIsFacingCorrectDirection = true;
         } else if (
           timeElapsed >
-          mostRecentDirectionChange[i] + directionChangeCoolDown
+          mostRecentDirectionChangeClone[i] + directionChangeCoolDown
         ) {
           arraySetter(enemyDirection, setEnemyDirection, "right", i);
-          arraySetter(
-            enemyDisappearTime,
-            setEnemyDisappearTime,
-            timeElapsed,
-            i
-          );
+          mostRecentDirectionChangeClone[i] = timeElapsed;
+          // arraySetter(
+          //   mostRecentDirectionChangeClone,
+          //   setMostRecentDirectionChange,
+          //   timeElapsed,
+          //   i
+          // );
           enemyIsFacingCorrectDirection = true;
         }
 
@@ -148,22 +161,39 @@ export const useEnemyAI = (
           playerToEnemyDistance > attackRange &&
           enemyIsFacingCorrectDirection
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "walk", i);
+          // arraySetter(enemyActivity, setEnemyActivity, "walk", i);
+          enemyActivityClone[i] = "walk";
 
           let modifier = playerCoordinate[0] > enemyCoordinate[0] ? 1 : -1;
-          setEnemyX(enemyX + modifier * enemyTranslationAmount);
+          arraySetter(
+            enemyX,
+            setEnemyX,
+            enemyX[i] + modifier * enemyTranslationAmount,
+            i
+          );
         } else if (
           Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
           enemyIsFacingCorrectDirection
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "attack", i);
-          if (enemyActivity !== "attack") {
-            arraySetter(
-              mostRecentEnemyAttack,
-              setMostRecentEnemyAttack,
-              timeElapsed,
-              i
-            );
+          if (enemyActivityClone[i] !== "attack") {
+            // console.log("trying to attack...");
+            // // enemyActivity[i] = "attack";
+            // let enemyActivityClone = [...enemyActivity];
+            // enemyActivityClone[i] = "attack";
+            // setEnemyActivity(enemyActivityClone);
+
+            // setEnemyActivity(["attack", "attack", "attack"]);
+
+            // arraySetter(enemyActivity, setEnemyActivity, "attack", i);
+            enemyActivityClone[i] = "attack";
+            mostRecentEnemyAttackClone[i] = timeElapsed;
+
+            // arraySetter(
+            //   mostRecentEnemyAttack,
+            //   setMostRecentEnemyAttack,
+            //   timeElapsed,
+            //   i
+            // );
           }
         } else {
           arraySetter(enemyActivity, setEnemyActivity, "idle", i);
@@ -174,31 +204,55 @@ export const useEnemyAI = (
           playerToEnemyDistance < attackRange &&
           Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
           playerVY < 0 &&
-          enemyActivity !== "death"
+          enemyActivityClone[i] !== "death"
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "death", i);
-          arraySetter(enemyDeathTime, setEnemyDeathTime, timeElapsed, i);
+          // console.log("enemy", i, " should die now");
+          // arraySetter(enemyActivity, setEnemyActivity, "death", i);
+          enemyActivityClone[i] = "death";
+          // arraySetter(enemyDeathTime, setEnemyDeathTime, timeElapsed, i);
+          enemyDeathTimeClone[i] = timeElapsed;
           setPlayerVY(8);
           setEnvironmentVY(-8);
           setPlayerActivity("double_jump");
         }
 
         let injurePlayer =
-          enemyActivity[i] === "attack" &&
+          enemyActivityClone[i] === "attack" &&
           playerToEnemyDistance < attackRange &&
-          timeElapsed > mostRecentEnemyAttack + timeToHurtPlayerFromAttackStart;
+          timeElapsed >
+            mostRecentEnemyAttackClone[i] + timeToHurtPlayerFromAttackStart;
 
         // console.log("player Y: ", playerY, "enemy Y: ", enemyY);
 
+        // console.log(mostRecentEnemyAttack[i]);
+
         if (injurePlayer) {
+          console.log("trying to hurt player");
           setPlayerDirection(enemyDirection);
-          setPlayerActivity("hurt");
-          setMostRecentEnemyAttack(timeElapsed + coolDownBetweenAttacks);
+          playerShouldBeHurt = true;
+          mostRecentEnemyAttackClone[i] = timeElapsed + coolDownBetweenAttacks;
+          // arraySetter(
+          //   mostRecentEnemyAttack,
+          //   setMostRecentEnemyAttack,
+          //   timeElapsed + coolDownBetweenAttacks,
+          //   i
+          // );
         }
+      }
+      setEnemyActivity(enemyActivityClone);
+      setEnemyDisappearTime(enemyDisappearTimeClone);
+      setEnemyDeathTime(enemyDeathTimeClone);
+      setMostRecentDirectionChange(mostRecentDirectionChangeClone);
+      setMostRecentEnemyAttack(mostRecentEnemyAttackClone);
+      setEnemyDirection(enemyDirectionClone);
+      if (playerShouldBeHurt) {
+        console.log("player should be hurt");
+        setPlayerActivity("hurt");
       }
     },
     [
       enemyDirection,
+      enemyActivity,
       enemyX,
       enemyY,
       enemyVY,
@@ -211,17 +265,17 @@ export const useEnemyAI = (
   );
 
   let rv = [];
-  for (let i = 0; i < numEnemies; i++) {
+  for (let j = 0; j < numEnemies; j++) {
     rv.push({
-      x: enemyX[i],
-      y: enemyY[i],
-      startX: enemies[i].startX,
-      startY: enemies[i].startY,
-      activity: enemyActivity[i],
-      direction: enemyDirection[i],
-      type: "hyena",
+      x: enemyX[j],
+      y: enemyY[j],
+      startX: enemies[j].startX,
+      startY: enemies[j].startY,
+      activity: enemyActivity[j],
+      direction: enemyDirection[j],
+      type: enemies[j].type,
     });
   }
 
-  return [rv, setEnemyActivity];
+  return rv;
 };

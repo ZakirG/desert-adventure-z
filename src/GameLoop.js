@@ -58,12 +58,13 @@ export const GameLoop = () => {
   let chaseRange = 320;
   let [enemyStartX, enemyStartY] = [700, 55];
 
-  let enemies = [{ startX: 700, startY: 55 }];
-  let setEnemyActivity;
-  [enemies, setEnemyActivity] = useEnemyAI(
+  let enemies = [
+    { startX: 700, startY: 55, type: "hyena" },
+    { startX: 900, startY: 55, type: "hyena" },
+    { startX: 1300, startY: 55, type: "hyena" },
+  ];
+  enemies = useEnemyAI(
     enemies,
-    enemyStartX,
-    enemyStartY,
     playerStartX,
     playerX,
     playerY,
