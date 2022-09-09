@@ -105,7 +105,14 @@ export const GameLoop = () => {
     (coin) => coin.activity === "collected"
   ).length;
 
-  let platforms = [{ width: 1, height: 1, platformX: 1200, platformY: 200 }];
+  let platformXs = range(3).map((i) => i * 200 + 1200);
+  let platforms = platformXs.map((x, i) => ({
+    platformX: x,
+    platformY: 500 + 100 * i,
+    width: 1,
+    height: 1,
+  }));
+
   usePlatformPhysics(
     platforms[0],
     playerStartX,

@@ -24,6 +24,7 @@ export const useSpriteAnimation = (
   let totalNumberOfFrames = frameCounts[creatureActivity];
   let timeSinceLastFrame = timeElapsed - lastFrameChange.current;
   let incrementor = 0;
+
   if (timeSinceLastFrame > 1 / spriteAnimationSpeeds[creatureActivity]) {
     lastFrameChange.current = timeElapsed;
     incrementor = 1;

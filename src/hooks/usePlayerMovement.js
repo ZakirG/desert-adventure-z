@@ -70,6 +70,8 @@ export const usePlayerMovement = (
         return;
       }
 
+      let playerIsHurt = playerActivity === "hurt";
+
       if (currentlyPressed.includes(leftKey)) {
         if (environmentIsAtLeftBound && !playerIsAtLeftBound) {
           setPlayerX((x) => x - playerTranslationAmount);
@@ -78,7 +80,7 @@ export const usePlayerMovement = (
         }
 
         setPlayerDirection("left");
-        if (!playerIsJumping && !playerIsFalling) {
+        if (!playerIsJumping && !playerIsFalling && !playerIsHurt) {
           setPlayerActivity("walk");
         }
       } else if (currentlyPressed.includes(rightKey)) {
@@ -88,7 +90,7 @@ export const usePlayerMovement = (
           setEnvironmentX((x) => x - playerTranslationAmount);
         }
         setPlayerDirection("right");
-        if (!playerIsJumping && !playerIsFalling) {
+        if (!playerIsJumping && !playerIsFalling && !playerIsHurt) {
           setPlayerActivity("walk");
         }
       }
@@ -96,8 +98,8 @@ export const usePlayerMovement = (
       if (
         !playerIsJumping &&
         !playerIsFalling &&
-        currentlyPressed.length === 0 &&
-        playerActivity !== "hurt"
+        !playerIsHurt &&
+        currentlyPressed.length === 0
       ) {
         setPlayerActivity("idle");
       }
@@ -167,7 +169,15 @@ export const usePlayerMovement = (
         }
       }
     },
-    [currentlyPressed, environmentX, playerX, playerY, playerVY, timeElapsed]
+    [
+      currentlyPressed,
+      environmentX,
+      playerX,
+      playerY,
+      playerVY,
+      timeElapsed,
+      playerActivity,
+    ]
   );
 
   return [
