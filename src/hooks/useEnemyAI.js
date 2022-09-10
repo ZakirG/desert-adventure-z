@@ -72,7 +72,7 @@ export const useEnemyAI = (
         ];
 
         if (
-          enemyActivity.current[i] === "death" &&
+          enemyActivity.current[i] === "hurt" &&
           timeElapsed > enemyDeathTime[i] + timeForEnemyToDie
         ) {
           arraySetter(

@@ -4,6 +4,7 @@ import punk_run from "./assets/main-characters/punk/Punk_run.png";
 import punk_hurt from "./assets/main-characters/punk/Punk_hurt.png";
 import punk_jump from "./assets/main-characters/punk/Punk_jump.png";
 import punk_fall from "./assets/main-characters/punk/Fall.png";
+import punk_happy from "./assets/main-characters/punk/Happy.png";
 import punk_double_jump from "./assets/main-characters/punk/Punk_double_jump.png";
 import punk_clap_attack from "./assets/main-characters/punk/Punk_attack3.png";
 import punk_punch from "./assets/main-characters/punk/Punk_run_attack.png";
@@ -18,6 +19,7 @@ const frameCounts = {
   clap_attack: 8,
   punch: 6,
   fall: 2,
+  happy: 6,
 };
 
 const spriteAnimationSpeeds = {
@@ -29,6 +31,7 @@ const spriteAnimationSpeeds = {
   clap_attack: 12,
   punch: 12,
   fall: 8,
+  happy: 8,
 };
 
 const activitiesForSprite = {
@@ -40,6 +43,7 @@ const activitiesForSprite = {
   clap_attack: punk_clap_attack,
   punch: punk_punch,
   fall: punk_fall,
+  happy: punk_happy,
 };
 
 export const Player = ({

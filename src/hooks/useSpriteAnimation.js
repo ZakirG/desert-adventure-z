@@ -12,6 +12,7 @@ export const useSpriteAnimation = (
   timeElapsed
 ) => {
   let previousFrameRef = useRef(0);
+
   let previousActivityRef = useRef(creatureActivity);
   let lastFrameChange = useRef(timeElapsed);
 

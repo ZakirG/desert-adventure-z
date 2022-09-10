@@ -5,7 +5,9 @@ export const usePlayerMovement = (
   playerWeight,
   playerSpeed,
   currentlyPressed,
-  { downKey, upKey, leftKey, rightKey, jumpKey, attackKey1, attackKey2 }
+  { downKey, upKey, leftKey, rightKey, jumpKey, attackKey1, attackKey2 },
+  finishLineX,
+  finishLineY
 ) => {
   let [timeElapsed, setTimeElapsed] = useState(0);
   let [environmentX, setEnvironmentX] = useState(-3);
@@ -29,6 +31,8 @@ export const usePlayerMovement = (
 
   let [playerOnPlatform, setPlayerOnPlatform] = useState(false);
 
+  let [finishLineReached, setFinishLineReached] = useState(false);
+
   useAnimationFrame(
     (deltaTime) => {
       setTimeElapsed((timeElapsed) => timeElapsed + deltaTime / 1000);
@@ -43,6 +47,12 @@ export const usePlayerMovement = (
       let playerIsAtLeftBound = playerX <= -355;
       let playerIsNearTheCenter = playerX < 4 && playerX > -4;
       let playerIsAtRightBound = playerX >= 370;
+
+      if (environmentIsAtRightBound && playerX >= 156) {
+        setFinishLineReached(true);
+        setPlayerActivity("happy");
+        return;
+      }
 
       // Snap objects to bounds if near out-of-bounds
       if (environmentIsAtLeftBound) {
@@ -203,6 +213,7 @@ export const usePlayerMovement = (
     setEnvironmentVY,
     playerOnPlatform,
     setPlayerOnPlatform,
+    finishLineReached,
     timeElapsed,
   ];
 };

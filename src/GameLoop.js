@@ -6,7 +6,9 @@ import { useCoinBehavior } from "./hooks/useCoinBehavior";
 import { Player } from "./Player";
 import { Enemy } from "./Enemy";
 import { Platform } from "./Platform";
+import { FinishLine } from "./FinishLine";
 import { HUD } from "./HUD";
+import { FinishScreen } from "./FinishScreen";
 import { Coin } from "./Coin";
 import { Environment } from "./Environment";
 import background_1 from "./assets/backgrounds/background1.png";
@@ -34,6 +36,9 @@ export const GameLoop = () => {
 
   let [playerStartX, playerStartY] = [350, -600 + undergroundHeight];
 
+  let [finishLineX, finishLineY] = [3500, 55];
+  let levelNumber = 1;
+
   let [
     playerX,
     playerY,
@@ -50,8 +55,16 @@ export const GameLoop = () => {
     setEnvironmentVY,
     playerOnPlatform,
     setPlayerOnPlatform,
+    finishLineReached,
     timeElapsed,
-  ] = usePlayerMovement(playerWeight, playerSpeed, currentlyPressed, controls);
+  ] = usePlayerMovement(
+    playerWeight,
+    playerSpeed,
+    currentlyPressed,
+    controls,
+    finishLineX,
+    finishLineY
+  );
 
   let enemySpeed = 1.4;
   let attackRange = 45;
@@ -84,11 +97,35 @@ export const GameLoop = () => {
 
   let coinGroundY = 53;
   let range = (n) => [...Array(n).keys()];
-  let coinXs = range(13).map((i) => i * 50 + 450);
-  let groundCoins = coinXs.map((x, i) => ({ x: x, y: coinGroundY + 40 * i }));
-  let platformCoins = [{ x: 1282, y: 257 }];
+  let coinArcRadius = 13;
 
-  let coins = [...groundCoins, ...platformCoins];
+  let coinXsA = range(coinArcRadius).map((i) => i * 50 + 450);
+  let coinArcA = coinXsA.map((x, i) => ({ x: x, y: coinGroundY + 40 * i }));
+  // let coinArcB = coinXsA.map((x, i) => ({
+  //   x: x,
+  //   y: coinGroundY + 40 * i + 35,
+  // }));
+
+  let coinXsC = range(coinArcRadius).map(
+    (i) => i * 50 + 450 + 50 * coinArcRadius
+  );
+  let coinArcC = coinXsC.map((x, i) => ({
+    x: x,
+    y: coinGroundY + 520 - 40 * i,
+  }));
+
+  // let coinArcD = coinXsC.map((x, i) => ({
+  //   x: x,
+  //   y: coinGroundY + 520 - 40 * i + 35,
+  // }));
+
+  let coinXsE = range(30).map((i) => i * 50 + 450 + coinArcRadius * 2 * 50);
+  let coinArcE = coinXsE.map((x, i) => ({ x: x, y: coinGroundY }));
+
+  let coins = [...coinArcA, ...coinArcC, ...coinArcE];
+
+  // let platformCoins = [{ x: 1282, y: 257 }];
+
   coins = useCoinBehavior(
     coins,
     coinGroundY,
@@ -105,31 +142,31 @@ export const GameLoop = () => {
     (coin) => coin.activity === "collected"
   ).length;
 
-  let platformXs = range(3).map((i) => i * 200 + 1200);
-  let platforms = platformXs.map((x, i) => ({
-    platformX: x,
-    platformY: 500 + 100 * i,
-    width: 1,
-    height: 1,
-  }));
+  // let platformXs = range(3).map((i) => i * 200 + 1200);
+  // let platforms = platformXs.map((x, i) => ({
+  //   platformX: x,
+  //   platformY: 500 + 100 * i,
+  //   width: 1,
+  //   height: 1,
+  // }));
 
-  usePlatformPhysics(
-    platforms[0],
-    playerStartX,
-    playerX,
-    playerY,
-    setPlayerY,
-    environmentX,
-    environmentY,
-    setEnvironmentY,
-    setPlayerActivity,
-    playerVY,
-    setPlayerVY,
-    setEnvironmentVY,
-    playerOnPlatform,
-    setPlayerOnPlatform,
-    timeElapsed
-  );
+  // usePlatformPhysics(
+  //   platforms[0],
+  //   playerStartX,
+  //   playerX,
+  //   playerY,
+  //   setPlayerY,
+  //   environmentX,
+  //   environmentY,
+  //   setEnvironmentY,
+  //   setPlayerActivity,
+  //   playerVY,
+  //   setPlayerVY,
+  //   setEnvironmentVY,
+  //   playerOnPlatform,
+  //   setPlayerOnPlatform,
+  //   timeElapsed
+  // );
 
   return (
     <>
@@ -181,6 +218,11 @@ export const GameLoop = () => {
             ></Platform>
           );
         })} */}
+        <FinishLine
+          finishLineX={finishLineX}
+          finishLineY={finishLineY}
+          timeElapsed={timeElapsed}
+        ></FinishLine>
       </Environment>
       <Player
         playerDirection={playerDirection}
@@ -192,6 +234,12 @@ export const GameLoop = () => {
         timeElapsed={timeElapsed}
       ></Player>
       <HUD numCoinsCollected={numCoinsCollected}></HUD>
+      <FinishScreen
+        numCoinsCollected={numCoinsCollected}
+        levelNumber={levelNumber}
+        timeElapsed={timeElapsed}
+        finishLineReached={finishLineReached}
+      ></FinishScreen>
     </>
   );
 };
