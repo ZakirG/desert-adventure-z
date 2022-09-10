@@ -34,13 +34,22 @@ export const usePlayerMovement = (
       setTimeElapsed((timeElapsed) => timeElapsed + deltaTime / 1000);
 
       let playerTranslationAmount = playerSpeed * deltaTime * 0.1;
+
+      let leftBound = -3;
+      let environmentIsAtLeftBound = environmentX >= leftBound;
+      let rightBound = -3027;
+      let environmentIsAtRightBound = environmentX <= rightBound;
+
       let playerIsAtLeftBound = playerX <= -355;
       let playerIsNearTheCenter = playerX < 4 && playerX > -4;
-      let environmentIsAtLeftBound = environmentX >= -3;
+      let playerIsAtRightBound = playerX >= 370;
 
       // Snap objects to bounds if near out-of-bounds
-      if (environmentX >= -3) {
-        setEnvironmentX(-3);
+      if (environmentIsAtLeftBound) {
+        setEnvironmentX(leftBound);
+      }
+      if (environmentIsAtRightBound) {
+        setEnvironmentX(rightBound);
       }
       if (playerY + environmentY < 0) {
         setPlayerY(0);
@@ -73,9 +82,15 @@ export const usePlayerMovement = (
       let playerIsHurt = playerActivity === "hurt";
 
       if (currentlyPressed.includes(leftKey) && !playerIsHurt) {
-        if (environmentIsAtLeftBound && !playerIsAtLeftBound) {
+        if (
+          (environmentIsAtLeftBound && !playerIsAtLeftBound) ||
+          (environmentIsAtRightBound && !playerIsNearTheCenter)
+        ) {
           setPlayerX((x) => x - playerTranslationAmount);
-        } else if (!environmentIsAtLeftBound && !playerIsAtLeftBound) {
+        } else if (
+          (!environmentIsAtLeftBound && !playerIsAtLeftBound) ||
+          (environmentIsAtRightBound && playerIsNearTheCenter)
+        ) {
           setEnvironmentX((x) => x + playerTranslationAmount);
         }
 
@@ -86,8 +101,10 @@ export const usePlayerMovement = (
       } else if (currentlyPressed.includes(rightKey) && !playerIsHurt) {
         if (environmentIsAtLeftBound && !playerIsNearTheCenter) {
           setPlayerX((x) => x + playerTranslationAmount);
-        } else {
+        } else if (!environmentIsAtRightBound && !playerIsAtRightBound) {
           setEnvironmentX((x) => x - playerTranslationAmount);
+        } else if (environmentIsAtRightBound && !playerIsAtRightBound) {
+          setPlayerX((x) => x + playerTranslationAmount);
         }
         setPlayerDirection("right");
         if (!playerIsJumping && !playerIsFalling && !playerIsHurt) {
@@ -143,16 +160,6 @@ export const usePlayerMovement = (
         setMostRecentJump(timeElapsed);
       } else {
         // Fall
-        // console.log(
-        //   "environmentY:",
-        //   environmentY,
-        //   "environmentVY:",
-        //   environmentVY,
-        //   "playerY:",
-        //   playerY,
-        //   "playerVY:",
-        //   playerVY
-        // );
         if ((playerY > 5.8 || environmentY > 5.8) && !playerOnPlatform) {
           setPlayerVY((vy) => vy - playerWeight);
           setPlayerY((y) => y + playerVY);

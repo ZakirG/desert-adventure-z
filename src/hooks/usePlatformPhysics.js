@@ -29,7 +29,7 @@ export const usePlatformPhysics = (
         -1 * environmentX + playerStartX + playerX - 47,
         playerY + environmentY + 47,
       ];
-      // console.log("environment Y: ", environmentY);
+
       let platformCoordinate = [platformX, platformY];
 
       let playerToPlatformDistance = distanceFormula(
@@ -37,21 +37,12 @@ export const usePlatformPhysics = (
         platformCoordinate
       );
 
-      // console.log(playerToPlatformDistance);
-
       if (
         playerCoordinate[1] > platformCoordinate[1] &&
         playerToPlatformDistance <= catchRange &&
         playerVY <= 0
       ) {
         // Catch the player from falling <3 support them!!
-        // console.log(
-        //   "catching player at playercoord: ",
-        //   playerCoordinate,
-        //   "platform coord:",
-        //   platformCoordinate
-        // );
-        // console.log("catching player");
         setPlayerVY(0);
         setPlayerY(platformCoordinate[1]);
         setEnvironmentVY(0);
@@ -61,18 +52,11 @@ export const usePlatformPhysics = (
       }
 
       // Player can walk off the platform
-      // console.log("on platform? ", playerOnPlatform);
       if (
         playerOnPlatform &&
         Math.abs(platformCoordinate[0] - playerCoordinate[0]) >
           width * pxPerWidth
       ) {
-        // console.log(
-        //   "player walked off the platform at playerY: ",
-        //   playerY,
-        //   "environmentY: ",
-        //   environmentY
-        // );
         setPlayerOnPlatform(false);
         setPlayerActivity("fall");
       }

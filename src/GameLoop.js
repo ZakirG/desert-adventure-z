@@ -170,7 +170,7 @@ export const GameLoop = () => {
             ></Coin>
           );
         })}
-        {platforms.map((platform, index) => {
+        {/* {platforms.map((platform, index) => {
           return (
             <Platform
               platformX={platform.platformX}
@@ -180,7 +180,7 @@ export const GameLoop = () => {
               key={index}
             ></Platform>
           );
-        })}
+        })} */}
       </Environment>
       <Player
         playerDirection={playerDirection}

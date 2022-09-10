@@ -24,7 +24,7 @@ const spriteAnimationSpeeds = {
   idle: 8,
   walk: 14,
   hurt: 6,
-  jump: 8,
+  jump: 10,
   double_jump: 8,
   clap_attack: 12,
   punch: 12,
