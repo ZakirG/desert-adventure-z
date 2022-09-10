@@ -17,7 +17,7 @@ export const useEnemyAI = (
   playerY,
   environmentX,
   environmentY,
-  enemySpeed,
+  enemySpeeds,
   attackRange,
   chaseRange,
   playerActivity,
@@ -49,9 +49,7 @@ export const useEnemyAI = (
   let [enemyDeathTime, setEnemyDeathTime] = useState(Array(numEnemies).fill(0));
   let timeForEnemyToDie = 1;
 
-  let [enemyDisappearTime, setEnemyDisappearTime] = useState(
-    Array(numEnemies).fill(0)
-  );
+  let enemyDisappearTime = useRef(Array(numEnemies).fill(0));
   let timeForEnemyToDisappear = 0.6;
 
   useAnimationFrame(
@@ -64,7 +62,8 @@ export const useEnemyAI = (
       for (let i = 0; i < numEnemies; i++) {
         let smallRandomNumber = Math.random() * 0.2;
         let enemyTranslationAmount =
-          smallRandomNumber * 15 + enemySpeed * deltaTime * 0.1;
+          smallRandomNumber * 15 +
+          enemySpeeds[enemies[i].type] * deltaTime * 0.1;
 
         let enemyCoordinate = [
           enemyX.current[i] + enemies[i].startX,
@@ -72,15 +71,10 @@ export const useEnemyAI = (
         ];
 
         if (
-          enemyActivity.current[i] === "hurt" &&
+          enemyActivity.current[i] === "death" &&
           timeElapsed > enemyDeathTime[i] + timeForEnemyToDie
         ) {
-          arraySetter(
-            enemyDisappearTime,
-            setEnemyDisappearTime,
-            timeElapsed,
-            i
-          );
+          enemyDisappearTime.current[i] = timeElapsed;
           enemyActivity.current[i] = "disappear";
           continue;
         } else if (enemyActivity.current[i] === "death") {
@@ -89,7 +83,7 @@ export const useEnemyAI = (
 
         if (
           enemyActivity.current[i] === "disappear" &&
-          timeElapsed > enemyDisappearTime[i] + timeForEnemyToDisappear
+          timeElapsed > enemyDisappearTime.current[i] + timeForEnemyToDisappear
         ) {
           enemyActivity.current[i] = "gone";
           continue;
