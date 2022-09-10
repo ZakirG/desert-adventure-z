@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useAnimationFrame } from "./useAnimationFrame";
 import { distanceFormula } from "../utils.js";
 
@@ -33,23 +33,17 @@ export const useEnemyAI = (
   let [mostRecentEnemyAttack, setMostRecentEnemyAttack] = useState(
     Array(numEnemies).fill(0)
   );
-  let [mostRecentDirectionChange, setMostRecentDirectionChange] = useState(
-    Array(numEnemies).fill(0)
-  );
+  let mostRecentDirectionChange = useRef(Array(numEnemies).fill(0));
   let timeToHurtPlayerFromAttackStart = 0.3;
   let coolDownBetweenAttacks = 1.5;
-  let directionChangeCoolDown = 1;
+  let directionChangeCoolDown = 0.5;
 
-  let [enemyDirection, setEnemyDirection] = useState(
-    Array(numEnemies).fill("right")
-  );
+  let enemyDirection = useRef(Array(numEnemies).fill("right"));
 
-  const [enemyActivity, setEnemyActivity] = useState(
-    Array(numEnemies).fill("idle")
-  );
+  const enemyActivity = useRef(Array(numEnemies).fill("idle"));
 
-  let [enemyX, setEnemyX] = useState(Array(numEnemies).fill(0));
-  let [enemyY, setEnemyY] = useState(Array(numEnemies).fill(0));
+  let enemyX = useRef(Array(numEnemies).fill(0));
+  let enemyY = useRef(Array(numEnemies).fill(0));
   let [enemyVY, setEnemyVY] = useState(Array(numEnemies).fill(0));
 
   let [enemyDeathTime, setEnemyDeathTime] = useState(Array(numEnemies).fill(0));
@@ -62,63 +56,55 @@ export const useEnemyAI = (
 
   useAnimationFrame(
     (deltaTime) => {
-      let enemyTranslationAmount = enemySpeed * deltaTime * 0.1;
-
       let playerCoordinate = [
         -1 * environmentX + playerStartX + playerX + 20,
         playerY + environmentY + 55,
       ];
 
-      let enemyActivityClone = enemyActivity.slice();
-      let enemyDisappearTimeClone = enemyDisappearTime.slice();
-      let enemyDeathTimeClone = enemyDeathTime.slice();
-      let mostRecentDirectionChangeClone = mostRecentDirectionChange.slice();
-      let mostRecentEnemyAttackClone = mostRecentEnemyAttack.slice();
-      let enemyDirectionClone = enemyDirection.slice();
-
       for (let i = 0; i < numEnemies; i++) {
+        let smallRandomNumber = Math.random() * 0.2;
+        let enemyTranslationAmount =
+          smallRandomNumber * 15 + enemySpeed * deltaTime * 0.1;
+
         let enemyCoordinate = [
-          enemyX[i] + enemies[i].startX,
-          enemyY[i] + enemies[i].startY,
+          enemyX.current[i] + enemies[i].startX,
+          enemyY.current[i] + enemies[i].startY,
         ];
 
         if (
-          enemyActivityClone[i] === "death" &&
-          timeElapsed > enemyDeathTimeClone[i] + timeForEnemyToDie
+          enemyActivity.current[i] === "death" &&
+          timeElapsed > enemyDeathTime[i] + timeForEnemyToDie
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "disappear", i);
           arraySetter(
             enemyDisappearTime,
             setEnemyDisappearTime,
             timeElapsed,
             i
           );
-          // enemyActivityClone[i] = "disappear";
-          // enemyDisappearTimeClone[i] = timeElapsed;
+          enemyActivity.current[i] = "disappear";
           continue;
-        } else if (enemyActivityClone[i] === "death") {
+        } else if (enemyActivity.current[i] === "death") {
           continue;
         }
 
         if (
-          enemyActivityClone[i] === "disappear" &&
-          timeElapsed > enemyDisappearTimeClone[i] + timeForEnemyToDisappear
+          enemyActivity.current[i] === "disappear" &&
+          timeElapsed > enemyDisappearTime[i] + timeForEnemyToDisappear
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "gone", i);
-          enemyActivityClone[i] = "gone";
+          enemyActivity.current[i] = "gone";
           continue;
-        } else if (enemyActivityClone[i] === "disappear") {
+        } else if (enemyActivity.current[i] === "disappear") {
           continue;
-        } else if (enemyActivityClone[i] === "gone") {
+        } else if (enemyActivity.current[i] === "gone") {
           continue;
         }
 
         let playerIsToRightAndEnemyIsFacingRight =
           playerCoordinate[0] > enemyCoordinate[0] &&
-          enemyDirectionClone[i] === "left";
+          enemyDirection.current[i] === "left";
         let playerIsToLeftAndEnemyIsFacingLeft =
           playerCoordinate[0] <= enemyCoordinate[0] &&
-          enemyDirectionClone[i] === "right";
+          enemyDirection.current[i] === "right";
         let enemyIsFacingCorrectDirection =
           playerIsToRightAndEnemyIsFacingRight ||
           playerIsToLeftAndEnemyIsFacingLeft;
@@ -126,21 +112,22 @@ export const useEnemyAI = (
         if (
           playerCoordinate[0] > enemyCoordinate[0] &&
           timeElapsed >
-            mostRecentDirectionChangeClone[i] + directionChangeCoolDown
+            mostRecentDirectionChange.current[i] +
+              directionChangeCoolDown +
+              smallRandomNumber
         ) {
-          arraySetter(enemyDirection, setEnemyDirection, "left", i);
-          mostRecentDirectionChangeClone[i] = timeElapsed;
+          enemyDirection.current[i] = "left";
+          mostRecentDirectionChange.current[i] = timeElapsed;
           enemyIsFacingCorrectDirection = true;
         } else if (
           timeElapsed >
-          mostRecentDirectionChangeClone[i] + directionChangeCoolDown
+          mostRecentDirectionChange.current[i] +
+            directionChangeCoolDown +
+            smallRandomNumber
         ) {
-          arraySetter(enemyDirection, setEnemyDirection, "right", i);
-          mostRecentDirectionChangeClone[i] = timeElapsed;
-
+          enemyDirection.current[i] = "right";
+          mostRecentDirectionChange.current[i] = timeElapsed;
           enemyIsFacingCorrectDirection = true;
-        } else {
-          enemyIsFacingCorrectDirection = false;
         }
 
         let playerToEnemyDistance = distanceFormula(
@@ -153,26 +140,17 @@ export const useEnemyAI = (
           playerToEnemyDistance > attackRange &&
           enemyIsFacingCorrectDirection
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "walk", i);
-          enemyActivityClone[i] = "walk";
+          enemyActivity.current[i] = "walk";
 
           let modifier = playerCoordinate[0] > enemyCoordinate[0] ? 1 : -1;
-          arraySetter(
-            enemyX,
-            setEnemyX,
-            enemyX[i] + modifier * enemyTranslationAmount,
-            i
-          );
+          enemyX.current[i] =
+            enemyX.current[i] + modifier * enemyTranslationAmount;
         } else if (
           Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
           enemyIsFacingCorrectDirection
         ) {
-          if (enemyActivityClone[i] !== "attack") {
-            enemyActivityClone[i] = "attack";
-            mostRecentEnemyAttackClone[i] = timeElapsed;
-
-            arraySetter(enemyActivity, setEnemyActivity, "attack", i);
-
+          if (enemyActivity.current[i] !== "attack") {
+            enemyActivity.current[i] = "attack";
             arraySetter(
               mostRecentEnemyAttack,
               setMostRecentEnemyAttack,
@@ -181,7 +159,7 @@ export const useEnemyAI = (
             );
           }
         } else {
-          arraySetter(enemyActivity, setEnemyActivity, "idle", i);
+          enemyActivity.current[i] = "idle";
         }
 
         if (
@@ -189,29 +167,26 @@ export const useEnemyAI = (
           playerToEnemyDistance < attackRange &&
           Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
           playerVY < 0 &&
-          enemyActivityClone[i] !== "death"
+          enemyActivity.current[i] !== "death"
         ) {
-          arraySetter(enemyActivity, setEnemyActivity, "death", i);
-          enemyActivityClone[i] = "death";
+          enemyActivity.current[i] = "death";
           arraySetter(enemyDeathTime, setEnemyDeathTime, timeElapsed, i);
-          enemyDeathTimeClone[i] = timeElapsed;
           setPlayerVY(8);
           setEnvironmentVY(-8);
           setPlayerActivity("double_jump");
         }
 
         let injurePlayer =
-          enemyActivityClone[i] === "attack" &&
+          enemyActivity.current[i] === "attack" &&
           playerToEnemyDistance < attackRange &&
           timeElapsed >
-            mostRecentEnemyAttackClone[i] + timeToHurtPlayerFromAttackStart;
+            mostRecentEnemyAttack[i] + timeToHurtPlayerFromAttackStart;
 
         if (injurePlayer || playerToEnemyDistance < 10) {
-          setPlayerDirection(enemyDirection[i]);
+          setPlayerDirection(enemyDirection.current[i]);
           setPlayerActivity((t) => {
             return "hurt";
           });
-          mostRecentEnemyAttackClone[i] = timeElapsed + coolDownBetweenAttacks;
           arraySetter(
             mostRecentEnemyAttack,
             setMostRecentEnemyAttack,
@@ -238,12 +213,12 @@ export const useEnemyAI = (
   let rv = [];
   for (let j = 0; j < numEnemies; j++) {
     rv.push({
-      x: enemyX[j],
-      y: enemyY[j],
+      x: enemyX.current[j],
+      y: enemyY.current[j],
       startX: enemies[j].startX,
       startY: enemies[j].startY,
-      activity: enemyActivity[j],
-      direction: enemyDirection[j],
+      activity: enemyActivity.current[j],
+      direction: enemyDirection.current[j],
       type: enemies[j].type,
     });
   }

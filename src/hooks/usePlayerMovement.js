@@ -42,7 +42,7 @@ export const usePlayerMovement = (
       if (environmentX >= -3) {
         setEnvironmentX(-3);
       }
-      if (playerY < 0 && environmentY < 0) {
+      if (playerY + environmentY < 0) {
         setPlayerY(0);
         setEnvironmentY(0);
       }
@@ -72,7 +72,7 @@ export const usePlayerMovement = (
 
       let playerIsHurt = playerActivity === "hurt";
 
-      if (currentlyPressed.includes(leftKey)) {
+      if (currentlyPressed.includes(leftKey) && !playerIsHurt) {
         if (environmentIsAtLeftBound && !playerIsAtLeftBound) {
           setPlayerX((x) => x - playerTranslationAmount);
         } else if (!environmentIsAtLeftBound && !playerIsAtLeftBound) {
@@ -83,7 +83,7 @@ export const usePlayerMovement = (
         if (!playerIsJumping && !playerIsFalling && !playerIsHurt) {
           setPlayerActivity("walk");
         }
-      } else if (currentlyPressed.includes(rightKey)) {
+      } else if (currentlyPressed.includes(rightKey) && !playerIsHurt) {
         if (environmentIsAtLeftBound && !playerIsNearTheCenter) {
           setPlayerX((x) => x + playerTranslationAmount);
         } else {

@@ -53,7 +53,7 @@ export const GameLoop = () => {
     timeElapsed,
   ] = usePlayerMovement(playerWeight, playerSpeed, currentlyPressed, controls);
 
-  let enemySpeed = 1.5;
+  let enemySpeed = 1.4;
   let attackRange = 45;
   let chaseRange = 320;
   let [enemyStartX, enemyStartY] = [700, 55];
