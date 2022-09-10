@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import "./GameWrapper.css";
 import { GameLoop } from "./GameLoop";
+import { MainMenu } from "./MainMenu";
 
 const GameContainer = styled.div`
   position: absolute;
@@ -24,17 +25,14 @@ const GameContainer = styled.div`
   }
 `;
 
-// const GameView = styled.div`
-//   position: relative;
-//   bottom: 100px;
-// `;
-
 export const GameWrapper = () => {
+  let [gameStarted, setGameStarted] = useState(false);
+  const onStart = () => {
+    setGameStarted(true);
+  };
   return (
     <GameContainer>
-      {/* <GameView> */}
-      <GameLoop />
-      {/* </GameView> */}
+      {gameStarted ? <GameLoop /> : <MainMenu onStart={onStart}></MainMenu>}
     </GameContainer>
   );
 };

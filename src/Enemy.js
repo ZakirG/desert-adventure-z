@@ -37,8 +37,8 @@ const spriteAnimationSpeeds = {
   walk: 15,
   jump: 8,
   attack: 12,
-  hurt: 6,
-  death: 6,
+  hurt: 10,
+  death: 10,
   disappear: 20,
 };
 

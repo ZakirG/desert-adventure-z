@@ -46,8 +46,11 @@ export const useEnemyAI = (
   let enemyY = useRef(Array(numEnemies).fill(0));
   let [enemyVY, setEnemyVY] = useState(Array(numEnemies).fill(0));
 
+  let enemyHurtTime = useRef(Array(numEnemies).fill(0));
+  let timeForHurtAnimation = 0.3;
+
   let [enemyDeathTime, setEnemyDeathTime] = useState(Array(numEnemies).fill(0));
-  let timeForEnemyToDie = 1;
+  let timeForEnemyToDie = 0.5;
 
   let enemyDisappearTime = useRef(Array(numEnemies).fill(0));
   let timeForEnemyToDisappear = 0.6;
@@ -71,6 +74,13 @@ export const useEnemyAI = (
         ];
 
         if (
+          enemyActivity.current[i] === "hurt" &&
+          timeElapsed > timeForHurtAnimation + enemyHurtTime.current[i]
+        ) {
+          enemyActivity.current[i] = "death";
+          arraySetter(enemyDeathTime, setEnemyDeathTime, timeElapsed, i);
+          continue;
+        } else if (
           enemyActivity.current[i] === "death" &&
           timeElapsed > enemyDeathTime[i] + timeForEnemyToDie
         ) {
@@ -78,6 +88,8 @@ export const useEnemyAI = (
           enemyActivity.current[i] = "disappear";
           continue;
         } else if (enemyActivity.current[i] === "death") {
+          continue;
+        } else if (enemyActivity.current[i] === "hurt") {
           continue;
         }
 
@@ -161,10 +173,10 @@ export const useEnemyAI = (
           playerToEnemyDistance < attackRange &&
           Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
           playerVY < 0 &&
-          enemyActivity.current[i] !== "death"
+          enemyActivity.current[i] !== "hurt"
         ) {
-          enemyActivity.current[i] = "death";
-          arraySetter(enemyDeathTime, setEnemyDeathTime, timeElapsed, i);
+          enemyActivity.current[i] = "hurt";
+          enemyHurtTime.current[i] = timeElapsed;
           setPlayerVY(8);
           setEnvironmentVY(-8);
           setPlayerActivity("double_jump");

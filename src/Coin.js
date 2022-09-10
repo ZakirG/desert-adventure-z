@@ -44,7 +44,7 @@ export const Coin = ({
     timeElapsed
   );
 
-  let scaleValue = "scale(1)";
+  let scaleValue = "scale(1.2)";
   coinStyle.bottom = "4px";
   coinStyle.height = "20px";
   if (coinActivity === "collecting") {
