@@ -26,6 +26,7 @@ export const useEnemyAI = (
   playerVY,
   setPlayerVY,
   setEnvironmentVY,
+  playerHealth,
   timeElapsed
 ) => {
   let numEnemies = enemies.length;
@@ -153,7 +154,8 @@ export const useEnemyAI = (
             enemyX.current[i] + modifier * enemyTranslationAmount;
         } else if (
           Math.abs(playerCoordinate[0] - enemyCoordinate[0]) < attackRange &&
-          enemyIsFacingCorrectDirection
+          enemyIsFacingCorrectDirection &&
+          playerHealth > 0
         ) {
           if (enemyActivity.current[i] !== "attack") {
             enemyActivity.current[i] = "attack";
@@ -190,9 +192,7 @@ export const useEnemyAI = (
 
         if (injurePlayer || playerToEnemyDistance < 10) {
           setPlayerDirection(enemyDirection.current[i]);
-          setPlayerActivity((t) => {
-            return "hurt";
-          });
+          setPlayerActivity("hurt");
           arraySetter(
             mostRecentEnemyAttack,
             setMostRecentEnemyAttack,

@@ -30,9 +30,16 @@ export const GameWrapper = () => {
   const onStart = () => {
     setGameStarted(true);
   };
+  const backToMainMenu = () => {
+    setGameStarted(false);
+  };
   return (
     <GameContainer>
-      {gameStarted ? <GameLoop /> : <MainMenu onStart={onStart}></MainMenu>}
+      {gameStarted ? (
+        <GameLoop backToMainMenu={backToMainMenu} />
+      ) : (
+        <MainMenu onStart={onStart}></MainMenu>
+      )}
     </GameContainer>
   );
 };

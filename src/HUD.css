@@ -4,6 +4,7 @@
   top: -75px;
   left: 10px;
   z-index: 1000;
+  -webkit-text-stroke: 1px black;
   color: white;
   font-weight: bold;
 }
@@ -20,4 +21,16 @@
   margin: 0;
   top: 10px;
   position: relative;
+}
+
+.health-bar {
+  overflow: hidden;
+  width: 200px;
+  height: 40px;
+}
+
+.health-bar img {
+  width: 550px;
+  position: relative;
+  left: -44px;
 }

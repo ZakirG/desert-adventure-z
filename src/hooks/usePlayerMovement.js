@@ -7,7 +7,9 @@ export const usePlayerMovement = (
   currentlyPressed,
   { downKey, upKey, leftKey, rightKey, jumpKey, attackKey1, attackKey2 },
   finishLineX,
-  finishLineY
+  finishLineY,
+  playerHealth,
+  setPlayerHealth
 ) => {
   let [timeElapsed, setTimeElapsed] = useState(0);
   let [environmentX, setEnvironmentX] = useState(-3);
@@ -91,6 +93,11 @@ export const usePlayerMovement = (
 
       let playerIsHurt = playerActivity === "hurt";
 
+      if (playerHealth <= 0) {
+        setPlayerActivity("death");
+        return;
+      }
+
       if (currentlyPressed.includes(leftKey) && !playerIsHurt) {
         if (
           (environmentIsAtLeftBound && !playerIsAtLeftBound) ||
@@ -140,6 +147,7 @@ export const usePlayerMovement = (
         setMostRecentHurt(0);
       } else if (playerActivity == "hurt" && mostRecentHurt == 0) {
         setMostRecentHurt(timeElapsed);
+        setPlayerHealth((health) => health - 1);
       }
 
       let jumpKeyPressed =

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useCurrentlyPressed } from "./hooks/useCurrentlyPressed";
 import { usePlayerMovement } from "./hooks/usePlayerMovement";
 import { useEnemyAI } from "./hooks/useEnemyAI";
@@ -24,7 +25,7 @@ let controls = {
   attackKey2: "KeyS",
 };
 
-export const GameLoop = () => {
+export const GameLoop = ({ backToMainMenu }) => {
   let gameHeight = 720;
   let gameWidth = 800;
   const currentlyPressed = useCurrentlyPressed(controls);
@@ -38,6 +39,8 @@ export const GameLoop = () => {
 
   let [finishLineX, finishLineY] = [3500, 55];
   let levelNumber = 1;
+
+  let [playerHealth, setPlayerHealth] = useState(5);
 
   let [
     playerX,
@@ -63,7 +66,9 @@ export const GameLoop = () => {
     currentlyPressed,
     controls,
     finishLineX,
-    finishLineY
+    finishLineY,
+    playerHealth,
+    setPlayerHealth
   );
 
   let enemySpeeds = { hyena: 1.4, dog: 1.6 };
@@ -94,39 +99,26 @@ export const GameLoop = () => {
     playerVY,
     setPlayerVY,
     setEnvironmentVY,
+    playerHealth,
     timeElapsed
   );
 
   let coinGroundY = 53;
   let range = (n) => [...Array(n).keys()];
-  let coinArcRadius = 13;
+  let coinArcRadius = 10;
 
   let coinXsA = range(coinArcRadius).map((i) => i * 50 + 450);
   let coinArcA = coinXsA.map((x, i) => ({ x: x, y: coinGroundY + 40 * i }));
-  // let coinArcB = coinXsA.map((x, i) => ({
-  //   x: x,
-  //   y: coinGroundY + 40 * i + 35,
-  // }));
-
   let coinXsC = range(coinArcRadius).map(
     (i) => i * 50 + 450 + 50 * coinArcRadius
   );
   let coinArcC = coinXsC.map((x, i) => ({
     x: x,
-    y: coinGroundY + 520 - 40 * i,
+    y: coinGroundY + 400 - 40 * i,
   }));
-
-  // let coinArcD = coinXsC.map((x, i) => ({
-  //   x: x,
-  //   y: coinGroundY + 520 - 40 * i + 35,
-  // }));
-
   let coinXsE = range(30).map((i) => i * 50 + 450 + coinArcRadius * 2 * 50);
   let coinArcE = coinXsE.map((x, i) => ({ x: x, y: coinGroundY }));
-
   let coins = [...coinArcA, ...coinArcC, ...coinArcE];
-
-  // let platformCoins = [{ x: 1282, y: 257 }];
 
   coins = useCoinBehavior(
     coins,
@@ -235,12 +227,17 @@ export const GameLoop = () => {
         playerStartY={playerStartY}
         timeElapsed={timeElapsed}
       ></Player>
-      <HUD numCoinsCollected={numCoinsCollected}></HUD>
+      <HUD
+        numCoinsCollected={numCoinsCollected}
+        healthRemaining={playerHealth}
+      ></HUD>
       <FinishScreen
         numCoinsCollected={numCoinsCollected}
         levelNumber={levelNumber}
         timeElapsed={timeElapsed}
         finishLineReached={finishLineReached}
+        playerHealth={playerHealth}
+        backToMainMenu={backToMainMenu}
       ></FinishScreen>
     </>
   );

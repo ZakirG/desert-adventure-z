@@ -8,6 +8,7 @@ import punk_happy from "./assets/main-characters/punk/Happy.png";
 import punk_double_jump from "./assets/main-characters/punk/Punk_double_jump.png";
 import punk_clap_attack from "./assets/main-characters/punk/Punk_attack3.png";
 import punk_punch from "./assets/main-characters/punk/Punk_run_attack.png";
+import punk_dead from "./assets/main-characters/punk/Punk_death.png";
 import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
 
 const frameCounts = {
@@ -20,6 +21,7 @@ const frameCounts = {
   punch: 6,
   fall: 2,
   happy: 6,
+  death: 6,
 };
 
 const spriteAnimationSpeeds = {
@@ -32,6 +34,7 @@ const spriteAnimationSpeeds = {
   punch: 12,
   fall: 8,
   happy: 8,
+  death: 8,
 };
 
 const activitiesForSprite = {
@@ -44,6 +47,7 @@ const activitiesForSprite = {
   punch: punk_punch,
   fall: punk_fall,
   happy: punk_happy,
+  death: punk_dead,
 };
 
 export const Player = ({
@@ -58,6 +62,13 @@ export const Player = ({
   let spriteImageWidth = 90;
   let extraPadding = 15;
 
+  let stopOnLastFrame = false;
+  if (playerActivity === "death") {
+    stopOnLastFrame = true;
+  }
+
+  console.log("playerActivity", playerActivity);
+
   let [playerStyle, playerSpriteSheet, paddingDirection] = useSpriteAnimation(
     frameCounts,
     spriteAnimationSpeeds,
@@ -65,7 +76,7 @@ export const Player = ({
     playerActivity,
     playerDirection,
     spriteImageWidth,
-    false,
+    stopOnLastFrame,
     extraPadding,
     timeElapsed
   );
