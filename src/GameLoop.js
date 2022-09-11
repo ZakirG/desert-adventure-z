@@ -66,7 +66,7 @@ export const GameLoop = () => {
     finishLineY
   );
 
-  let enemySpeeds = { hyena: 1.4, dog: 1.9 };
+  let enemySpeeds = { hyena: 1.4, dog: 1.6 };
   let attackRange = 45;
   let chaseRange = 320;
   let [enemyStartX, enemyStartY] = [700, 55];
