@@ -45,7 +45,6 @@ export const useEnemyAI = (
 
   let enemyX = useRef(Array(numEnemies).fill(0));
   let enemyY = useRef(Array(numEnemies).fill(0));
-  let [enemyVY, setEnemyVY] = useState(Array(numEnemies).fill(0));
 
   let enemyHurtTime = useRef(Array(numEnemies).fill(0));
   let timeForHurtAnimation = 0.3;
@@ -207,7 +206,6 @@ export const useEnemyAI = (
       enemyActivity,
       enemyX,
       enemyY,
-      enemyVY,
       timeElapsed,
       playerX,
       playerY,

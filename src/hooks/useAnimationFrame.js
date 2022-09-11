@@ -6,9 +6,8 @@ export const useAnimationFrame = (callback, dependencies) => {
   // without triggering a re-render on their change
   const requestRef = useRef();
   const previousTimeRef = useRef();
-
   const animate = (time) => {
-    if (previousTimeRef.current != undefined) {
+    if (previousTimeRef.current !== undefined) {
       const deltaTime = time - previousTimeRef.current;
       callback(deltaTime);
     }

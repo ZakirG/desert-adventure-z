@@ -72,7 +72,7 @@ export const Enemy = ({
 }) => {
   let spriteImageWidth = 90;
   let extraPadding = -10;
-  if (enemyActivity === "walk" && enemyType == "hyena") {
+  if (enemyActivity === "walk" && enemyType === "hyena") {
     extraPadding = -5;
   }
   let stopOnLastFrame = false;
@@ -108,7 +108,7 @@ export const Enemy = ({
   let spriteShift = enemyDirectionAdjusted === "right" ? "0px" : "40px";
   enemyStyle.paddingRight = spriteShift;
 
-  if (enemyActivity == "disappear") {
+  if (enemyActivity === "disappear") {
     enemyStyle.bottom = "-10px";
   }
 

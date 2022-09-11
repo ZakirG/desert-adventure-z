@@ -13,6 +13,7 @@ export const MainMenu = ({ onStart }) => {
       <img
         src={pyramid}
         className="pyramid"
+        alt="pyramid"
         style={{ top: "190px", position: "relative" }}
       />
       <div className="instructions" style={{ transform: instructionsScale }}>

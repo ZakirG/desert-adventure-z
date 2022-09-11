@@ -17,6 +17,7 @@ export const Platform = ({ platformX, platformY, width, height }) => {
         src={platform_smallest}
         className="platform"
         style={{ height: "100%" }}
+        alt="platform"
       />
     </div>
   );

@@ -22,8 +22,8 @@ export const Environment = ({
         }}
       >
         <div className="environment-background">
-          <img src={imageSource} />
-          <img src={imageSource2} />
+          <img src={imageSource} alt="desert background" />
+          <img src={imageSource2} alt="desert background" />
         </div>
         {children}
       </div>

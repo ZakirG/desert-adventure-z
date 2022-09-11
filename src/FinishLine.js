@@ -18,18 +18,17 @@ export const FinishLine = ({ finishLineX, finishLineY, timeElapsed }) => {
   let spriteImageWidth = 54;
   let extraPadding = 0;
 
-  let [finishLineStyle, finishLineSpriteSheet, paddingDirection] =
-    useSpriteAnimation(
-      frameCounts,
-      spriteAnimationSpeeds,
-      activitiesForSprite,
-      "wave",
-      "right",
-      spriteImageWidth,
-      false,
-      extraPadding,
-      timeElapsed
-    );
+  let [finishLineStyle, finishLineSpriteSheet] = useSpriteAnimation(
+    frameCounts,
+    spriteAnimationSpeeds,
+    activitiesForSprite,
+    "wave",
+    "right",
+    spriteImageWidth,
+    false,
+    extraPadding,
+    timeElapsed
+  );
 
   finishLineStyle.paddingRight = "0px";
   finishLineStyle.height = "81px";
@@ -48,6 +47,7 @@ export const FinishLine = ({ finishLineX, finishLineY, timeElapsed }) => {
         src={finishLineSpriteSheet}
         className="finish-line-sprite-sheet"
         style={finishLineStyle}
+        alt="finish line flag"
       />
     </div>
   );

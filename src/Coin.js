@@ -32,7 +32,7 @@ export const Coin = ({
     spriteImageWidth = 100;
   }
 
-  let [coinStyle, coinSpriteSheet, paddingDirection] = useSpriteAnimation(
+  let [coinStyle, coinSpriteSheet] = useSpriteAnimation(
     frameCounts,
     spriteAnimationSpeeds,
     activitiesForSprite,
@@ -53,7 +53,7 @@ export const Coin = ({
     scaleValue = "scale(2)";
   }
 
-  if (coinActivity == "collected") {
+  if (coinActivity === "collected") {
     return null;
   }
 

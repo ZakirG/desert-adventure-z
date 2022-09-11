@@ -55,11 +55,11 @@ export const useSpriteAnimation = (
     position: "relative",
     bottom: "15px",
   };
-  if (creatureDirection == "left") {
+  if (creatureDirection === "left") {
     creatureStyle.transform = "scaleX(-1)";
     creatureStyle["WebkitTransform"] = "scaleX(-1)";
     creatureStyle.right = spriteSheetPosition + 40 + "px";
-  } else if (creatureDirection == "right") {
+  } else if (creatureDirection === "right") {
     creatureStyle.transform = "";
     creatureStyle["WebkitTransform"] = "";
     creatureStyle.right = spriteSheetPosition + "px";
@@ -68,7 +68,7 @@ export const useSpriteAnimation = (
   let creatureSpriteSheet = activitiesForSprite[creatureActivity];
 
   let paddingDirection = "paddingRight";
-  if (creatureDirection == "left") {
+  if (creatureDirection === "left") {
     paddingDirection = "paddingLeft";
   }
 

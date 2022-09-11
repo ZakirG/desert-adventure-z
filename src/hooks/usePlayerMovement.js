@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAnimationFrame } from "./useAnimationFrame";
 
 export const usePlayerMovement = (
   playerWeight,
   playerSpeed,
   currentlyPressed,
-  { downKey, upKey, leftKey, rightKey, jumpKey, attackKey1, attackKey2 },
-  finishLineX,
-  finishLineY,
+  { upKey, leftKey, rightKey, jumpKey, attackKey1 },
   playerHealth,
   setPlayerHealth
 ) => {
@@ -139,13 +137,13 @@ export const usePlayerMovement = (
       }
 
       if (
-        playerActivity == "hurt" &&
-        mostRecentHurt != 0 &&
+        playerActivity === "hurt" &&
+        mostRecentHurt !== 0 &&
         timeElapsed > mostRecentHurt + hurtPhaseDuration
       ) {
         setPlayerActivity("idle");
         setMostRecentHurt(0);
-      } else if (playerActivity == "hurt" && mostRecentHurt == 0) {
+      } else if (playerActivity === "hurt" && mostRecentHurt === 0) {
         setMostRecentHurt(timeElapsed);
         setPlayerHealth((health) => health - 1);
       }
@@ -208,19 +206,15 @@ export const usePlayerMovement = (
   return [
     playerX,
     playerY,
-    setPlayerY,
     playerDirection,
     setPlayerDirection,
     playerActivity,
     setPlayerActivity,
     environmentX,
     environmentY,
-    setEnvironmentY,
     playerVY,
     setPlayerVY,
     setEnvironmentVY,
-    playerOnPlatform,
-    setPlayerOnPlatform,
     finishLineReached,
     timeElapsed,
   ];

@@ -9,11 +9,11 @@ export const HUD = ({ numCoinsCollected, healthRemaining }) => {
   return (
     <div className="HUD">
       <div className="health-bar" style={healthBarWrapperStyle}>
-        <img src={health_bar} style={healthBarImgStyle} />
+        <img src={health_bar} style={healthBarImgStyle} alt="health bar" />
       </div>
       <div className="coin-counter">
         <div className="coin-counter-icon">
-          <img src={coin_gold} height={30} />{" "}
+          <img src={coin_gold} height={30} alt="coin counter coin icon" />{" "}
         </div>{" "}
         x {numCoinsCollected}
       </div>

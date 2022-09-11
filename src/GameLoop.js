@@ -2,11 +2,9 @@ import { useState } from "react";
 import { useCurrentlyPressed } from "./hooks/useCurrentlyPressed";
 import { usePlayerMovement } from "./hooks/usePlayerMovement";
 import { useEnemyAI } from "./hooks/useEnemyAI";
-import { usePlatformPhysics } from "./hooks/usePlatformPhysics";
 import { useCoinBehavior } from "./hooks/useCoinBehavior";
 import { Player } from "./Player";
 import { Enemy } from "./Enemy";
-import { Platform } from "./Platform";
 import { FinishLine } from "./FinishLine";
 import { HUD } from "./HUD";
 import { FinishScreen } from "./FinishScreen";
@@ -45,19 +43,15 @@ export const GameLoop = ({ backToMainMenu }) => {
   let [
     playerX,
     playerY,
-    setPlayerY,
     playerDirection,
     setPlayerDirection,
     playerActivity,
     setPlayerActivity,
     environmentX,
     environmentY,
-    setEnvironmentY,
     playerVY,
     setPlayerVY,
     setEnvironmentVY,
-    playerOnPlatform,
-    setPlayerOnPlatform,
     finishLineReached,
     timeElapsed,
   ] = usePlayerMovement(
@@ -74,7 +68,6 @@ export const GameLoop = ({ backToMainMenu }) => {
   let enemySpeeds = { hyena: 1.4, dog: 1.6 };
   let attackRange = 45;
   let chaseRange = 320;
-  let [enemyStartX, enemyStartY] = [700, 55];
 
   let enemies = [
     { startX: 700, startY: 55, type: "hyena" },

@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useAnimationFrame } from "./useAnimationFrame";
 import { distanceFormula } from "../utils.js";
 
@@ -21,7 +20,7 @@ export const usePlatformPhysics = (
 ) => {
   let catchRange = 25;
   let pxPerWidth = 60;
-  let { width, height, platformX, platformY } = platform;
+  let { width, platformX, platformY } = platform;
 
   useAnimationFrame(
     (deltaTime) => {

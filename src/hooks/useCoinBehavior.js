@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAnimationFrame } from "./useAnimationFrame";
 import { distanceFormula } from "../utils.js";
 
@@ -53,7 +53,7 @@ export const useCoinBehavior = (
         if (
           playerToCoinDistance < pickupRange &&
           coinActive[i] &&
-          coinActivity[i] != "collecting"
+          coinActivity[i] !== "collecting"
         ) {
           let coinActivityClone = [...coinActivity];
           coinActivityClone[i] = "collecting";
@@ -65,7 +65,7 @@ export const useCoinBehavior = (
         }
 
         if (
-          coinActivity[i] == "collecting" &&
+          coinActivity[i] === "collecting" &&
           timeElapsed > mostRecentCollectionTime[i] + timeToCollect
         ) {
           let coinActivityClone = [...coinActivity];
