@@ -39,6 +39,7 @@ export const FinishScreen = ({
         onClick={() => {
           backToMainMenu();
         }}
+        style={overlayStyle}
       >
         CONTINUE
       </button>

@@ -55,3 +55,10 @@
   cursor: pointer;
   transition: all 0.2s;
 }
+
+.version-number {
+  font-size: 12px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}

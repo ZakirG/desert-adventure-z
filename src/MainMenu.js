@@ -5,6 +5,7 @@ import pyramid from "./assets/environment-objects/pyramid.png";
 export const MainMenu = ({ onStart }) => {
   let [showingInstructions, setShowingInstructions] = useState(false);
   let instructionsScale = showingInstructions ? "scale(1)" : "scale(0)";
+  let versionNumber = "0.1";
 
   return (
     <div className="main-menu">
@@ -40,6 +41,7 @@ export const MainMenu = ({ onStart }) => {
           INSTRUCTIONS
         </button>
       </div>
+      <div className="version-number">V{versionNumber}</div>
     </div>
   );
 };

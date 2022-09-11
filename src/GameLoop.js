@@ -116,9 +116,28 @@ export const GameLoop = ({ backToMainMenu }) => {
     x: x,
     y: coinGroundY + 400 - 40 * i,
   }));
-  let coinXsE = range(30).map((i) => i * 50 + 450 + coinArcRadius * 2 * 50);
+  let coinXsD = range(coinArcRadius).map((i) => i * 50 + 2200);
+  let coinArcD = coinXsD.map((x, i) => ({ x: x, y: coinGroundY + 40 * i }));
+  let coinXsE = range(15).map((i) => i * 50 + 450 + coinArcRadius * 2 * 50);
   let coinArcE = coinXsE.map((x, i) => ({ x: x, y: coinGroundY }));
-  let coins = [...coinArcA, ...coinArcC, ...coinArcE];
+
+  let coinXsF = range(8).map((i) => i * 50 + 3200);
+  let coinArcF = coinXsF.map((x, i) => ({ x: x, y: coinGroundY }));
+
+  let coinXsG = range(coinArcRadius).map((i) => i * 50 + 2700);
+  let coinArcG = coinXsG.map((x, i) => ({
+    x: x,
+    y: coinGroundY + 400 - 40 * i,
+  }));
+
+  let coins = [
+    ...coinArcA,
+    ...coinArcC,
+    ...coinArcD,
+    ...coinArcE,
+    ...coinArcF,
+    ...coinArcG,
+  ];
 
   coins = useCoinBehavior(
     coins,

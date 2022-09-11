@@ -190,7 +190,7 @@ export const useEnemyAI = (
           timeElapsed >
             mostRecentEnemyAttack[i] + timeToHurtPlayerFromAttackStart;
 
-        if (injurePlayer || playerToEnemyDistance < 10) {
+        if ((injurePlayer || playerToEnemyDistance < 10) && playerHealth > 0) {
           setPlayerDirection(enemyDirection.current[i]);
           setPlayerActivity("hurt");
           arraySetter(
