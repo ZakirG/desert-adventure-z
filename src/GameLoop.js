@@ -146,32 +146,6 @@ export const GameLoop = ({ backToMainMenu }) => {
     (coin) => coin.activity === "collected"
   ).length;
 
-  // let platformXs = range(3).map((i) => i * 200 + 1200);
-  // let platforms = platformXs.map((x, i) => ({
-  //   platformX: x,
-  //   platformY: 500 + 100 * i,
-  //   width: 1,
-  //   height: 1,
-  // }));
-
-  // usePlatformPhysics(
-  //   platforms[0],
-  //   playerStartX,
-  //   playerX,
-  //   playerY,
-  //   setPlayerY,
-  //   environmentX,
-  //   environmentY,
-  //   setEnvironmentY,
-  //   setPlayerActivity,
-  //   playerVY,
-  //   setPlayerVY,
-  //   setEnvironmentVY,
-  //   playerOnPlatform,
-  //   setPlayerOnPlatform,
-  //   timeElapsed
-  // );
-
   return (
     <>
       <Environment
@@ -211,17 +185,6 @@ export const GameLoop = ({ backToMainMenu }) => {
             ></Coin>
           );
         })}
-        {/* {platforms.map((platform, index) => {
-          return (
-            <Platform
-              platformX={platform.platformX}
-              platformY={platform.platformY}
-              width={platform.width}
-              height={platform.height}
-              key={index}
-            ></Platform>
-          );
-        })} */}
         <FinishLine
           finishLineX={finishLineX}
           finishLineY={finishLineY}

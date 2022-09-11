@@ -7,7 +7,6 @@ import { MainMenu } from "./MainMenu";
 const GameContainer = styled.div`
   position: absolute;
   width: 800px;
-  // height: 600px;
   height: 720px;
   border: 1px solid #eee;
   overflow: hidden;
