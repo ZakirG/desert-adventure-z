@@ -67,8 +67,6 @@ export const Player = ({
     stopOnLastFrame = true;
   }
 
-  console.log("playerActivity", playerActivity);
-
   let [playerStyle, playerSpriteSheet, paddingDirection] = useSpriteAnimation(
     frameCounts,
     spriteAnimationSpeeds,

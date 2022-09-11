@@ -59,8 +59,6 @@ export const GameLoop = ({ backToMainMenu }) => {
     playerSpeed,
     currentlyPressed,
     controls,
-    finishLineX,
-    finishLineY,
     playerHealth,
     setPlayerHealth
   );
