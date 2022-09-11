@@ -1,5 +1,5 @@
 import "./Environment.css";
-import rock from "./assets/tiles/Tile_24.png";
+import rock from "../assets/tiles/Tile_24.png";
 
 export const Environment = ({
   imageSource,

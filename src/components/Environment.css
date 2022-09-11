@@ -1,7 +1,7 @@
 #environment-div {
   position: absolute;
   /* z-index: 0; */
-  /* background-image: url(./assets/tiles/Tile_24.png); */
+  /* background-image: url(../assets/tiles/Tile_24.png); */
 }
 
 #underground {
@@ -11,7 +11,7 @@
   width: 8000px;
   background-repeat: repeat;
   background: white;
-  background-image: url(./assets/tiles/Tile_24.png);
+  background-image: url(../assets/tiles/Tile_24.png);
 }
 
 .environment-background {
@@ -30,7 +30,7 @@
   width: 8000px;
   background-repeat: repeat;
   background: white;
-  background-image: url(./assets/tiles/Tile_24.png); */
+  background-image: url(../assets/tiles/Tile_24.png); */
 }
 
 .environment-background img {

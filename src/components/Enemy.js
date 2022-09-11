@@ -1,18 +1,18 @@
 import "./Enemy.css";
-import hyena_idle from "./assets/enemies/Hyena/Hyena_idle.png";
-import hyena_run from "./assets/enemies/Hyena/Hyena_walk.png";
-import hyena_attack from "./assets/enemies/Hyena/Hyena_attack.png";
-import hyena_hurt from "./assets/enemies/Hyena/Hyena_hurt.png";
-import hyena_death from "./assets/enemies/Hyena/Hyena_death.png";
+import hyena_idle from "../assets/enemies/Hyena/Hyena_idle.png";
+import hyena_run from "../assets/enemies/Hyena/Hyena_walk.png";
+import hyena_attack from "../assets/enemies/Hyena/Hyena_attack.png";
+import hyena_hurt from "../assets/enemies/Hyena/Hyena_hurt.png";
+import hyena_death from "../assets/enemies/Hyena/Hyena_death.png";
 
-import dog_idle from "./assets/enemies/Dog/Idle.png";
-import dog_run from "./assets/enemies/Dog/Walk.png";
-import dog_attack from "./assets/enemies/Dog/Attack.png";
-import dog_hurt from "./assets/enemies/Dog/Hurt.png";
-import dog_death from "./assets/enemies/Dog/Death.png";
+import dog_idle from "../assets/enemies/Dog/Idle.png";
+import dog_run from "../assets/enemies/Dog/Walk.png";
+import dog_attack from "../assets/enemies/Dog/Attack.png";
+import dog_hurt from "../assets/enemies/Dog/Hurt.png";
+import dog_death from "../assets/enemies/Dog/Death.png";
 
-import gas_explosion from "./assets/fx/explosion_gas_circle_sheet.png";
-import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
+import gas_explosion from "../assets/fx/explosion_gas_circle_sheet.png";
+import { useSpriteAnimation } from "../hooks/useSpriteAnimation";
 
 const frameCountsHyena = {
   idle: 4,

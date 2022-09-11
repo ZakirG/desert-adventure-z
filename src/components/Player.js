@@ -1,15 +1,15 @@
 import "./Player.css";
-import punk_idle from "./assets/main-characters/punk/Punk_idle.png";
-import punk_run from "./assets/main-characters/punk/Punk_run.png";
-import punk_hurt from "./assets/main-characters/punk/Punk_hurt.png";
-import punk_jump from "./assets/main-characters/punk/Punk_jump.png";
-import punk_fall from "./assets/main-characters/punk/Fall.png";
-import punk_happy from "./assets/main-characters/punk/Happy.png";
-import punk_double_jump from "./assets/main-characters/punk/Punk_double_jump.png";
-import punk_clap_attack from "./assets/main-characters/punk/Punk_attack3.png";
-import punk_punch from "./assets/main-characters/punk/Punk_run_attack.png";
-import punk_dead from "./assets/main-characters/punk/Punk_death.png";
-import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
+import punk_idle from "../assets/main-characters/punk/Punk_idle.png";
+import punk_run from "../assets/main-characters/punk/Punk_run.png";
+import punk_hurt from "../assets/main-characters/punk/Punk_hurt.png";
+import punk_jump from "../assets/main-characters/punk/Punk_jump.png";
+import punk_fall from "../assets/main-characters/punk/Fall.png";
+import punk_happy from "../assets/main-characters/punk/Happy.png";
+import punk_double_jump from "../assets/main-characters/punk/Punk_double_jump.png";
+import punk_clap_attack from "../assets/main-characters/punk/Punk_attack3.png";
+import punk_punch from "../assets/main-characters/punk/Punk_run_attack.png";
+import punk_dead from "../assets/main-characters/punk/Punk_death.png";
+import { useSpriteAnimation } from "../hooks/useSpriteAnimation";
 
 const frameCounts = {
   idle: 4,

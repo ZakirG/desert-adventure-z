@@ -1,5 +1,5 @@
 import "./Platform.css";
-import platform_smallest from "./assets/tiles/Tile_47.png";
+import platform_smallest from "../assets/tiles/Tile_47.png";
 
 export const Platform = ({ platformX, platformY, width, height }) => {
   return (

@@ -1,5 +1,5 @@
-import coin_gold from "./assets/items/Coin_gold.png";
-import health_bar from "./assets/health-bar/health-bar.png";
+import coin_gold from "../assets/items/Coin_gold.png";
+import health_bar from "../assets/health-bar/health-bar.png";
 import "./HUD.css";
 
 export const HUD = ({ numCoinsCollected, healthRemaining }) => {

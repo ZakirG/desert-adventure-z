@@ -1,6 +1,6 @@
 import "./FinishLine.css";
-import desert_flag from "./assets/environment-objects/Flag.png";
-import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
+import desert_flag from "../assets/environment-objects/Flag.png";
+import { useSpriteAnimation } from "../hooks/useSpriteAnimation";
 
 const frameCounts = {
   wave: 2,

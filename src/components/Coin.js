@@ -1,7 +1,7 @@
 import "./Coin.css";
-import coin_gold from "./assets/items/Coin_gold.png";
-import shine from "./assets/fx/Shine.png";
-import { useSpriteAnimation } from "./hooks/useSpriteAnimation";
+import coin_gold from "../assets/items/Coin_gold.png";
+import shine from "../assets/fx/Shine.png";
+import { useSpriteAnimation } from "../hooks/useSpriteAnimation";
 
 const frameCounts = {
   idle: 5,
