@@ -28,8 +28,8 @@ export const GameLoop = ({ backToMainMenu }) => {
   let gameWidth = 800;
   const currentlyPressed = useCurrentlyPressed(controls);
 
-  let playerWeight = 0.5;
-  let playerSpeed = 5.5;
+  let playerWeight = 0.37;
+  let playerSpeed = 5.7;
 
   let undergroundHeight = 100;
 
