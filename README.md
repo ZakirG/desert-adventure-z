@@ -9,8 +9,4 @@ Press the up arrow to jump.
 Defeat enemies by jumping on them.
 Collect coins.
 
-### Discussion
-
-Refactoring in progress.
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
